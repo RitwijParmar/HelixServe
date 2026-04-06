@@ -1,0 +1,252 @@
+{
+  "timestamp_utc": "20260406T200700Z",
+  "url": "http://34.136.218.176:8000",
+  "stream": true,
+  "max_tokens": 64,
+  "temperature": 0.0,
+  "workloads": [
+    {
+      "name": "short",
+      "mode": "short",
+      "requests": 200,
+      "concurrency": 16
+    },
+    {
+      "name": "long",
+      "mode": "long",
+      "requests": 200,
+      "concurrency": 16
+    },
+    {
+      "name": "mixed",
+      "mode": "mixed",
+      "requests": 200,
+      "concurrency": 16
+    },
+    {
+      "name": "repeated_prefix",
+      "mode": "repeated_prefix",
+      "requests": 200,
+      "concurrency": 16
+    },
+    {
+      "name": "burst",
+      "mode": "mixed",
+      "requests": 400,
+      "concurrency": 64
+    }
+  ],
+  "reports": {
+    "short": {
+      "requests": 200.0,
+      "concurrency": 16.0,
+      "elapsed_s": 4.595359083,
+      "throughput_rps": 43.52217016943831,
+      "throughput_tokens_s": 1044.5320840665195,
+      "latency_p50": 0.3502063340000001,
+      "latency_p95": 0.401232292,
+      "latency_p99": 0.4064541250000002,
+      "ttft_p50": 0.13872920900000008,
+      "ttft_p95": 0.17854920899999982,
+      "ttft_p99": 0.18619741700000025,
+      "itl_p50": 0.009252402173913042,
+      "itl_p95": 0.010814704695652174,
+      "itl_p99": 0.011803706521739132,
+      "avg_completion_tokens": 24.0
+    },
+    "long": {
+      "requests": 200.0,
+      "concurrency": 16.0,
+      "elapsed_s": 6.686803875,
+      "throughput_rps": 29.909655455537045,
+      "throughput_tokens_s": 837.4703527550373,
+      "latency_p50": 0.5203271250000006,
+      "latency_p95": 0.559011332999999,
+      "latency_p99": 0.565356165999999,
+      "ttft_p50": 0.3070067079999994,
+      "ttft_p95": 0.3416523750000007,
+      "ttft_p99": 0.349301917,
+      "itl_p50": 0.008037404333333347,
+      "itl_p95": 0.014113515407407462,
+      "itl_p99": 0.014846015444444437,
+      "avg_completion_tokens": 28.0
+    },
+    "mixed": {
+      "requests": 200.0,
+      "concurrency": 16.0,
+      "elapsed_s": 5.116405625000002,
+      "throughput_rps": 39.08994217009523,
+      "throughput_tokens_s": 981.1575484693901,
+      "latency_p50": 0.3875643749999984,
+      "latency_p95": 0.44650658300000146,
+      "latency_p99": 0.4510082920000009,
+      "ttft_p50": 0.16795541699999994,
+      "ttft_p95": 0.2386037089999995,
+      "ttft_p99": 0.2462799579999988,
+      "itl_p50": 0.009108989130434824,
+      "itl_p95": 0.011732195652173871,
+      "itl_p99": 0.012361226434782633,
+      "avg_completion_tokens": 25.1
+    },
+    "repeated_prefix": {
+      "requests": 200.0,
+      "concurrency": 16.0,
+      "elapsed_s": 4.566621375,
+      "throughput_rps": 43.79605480211286,
+      "throughput_tokens_s": 1092.2736067646947,
+      "latency_p50": 0.354418625000001,
+      "latency_p95": 0.36872833299999996,
+      "latency_p99": 0.38053062500000223,
+      "ttft_p50": 0.1431022079999984,
+      "ttft_p95": 0.1591153339999991,
+      "ttft_p99": 0.1615569590000021,
+      "itl_p50": 0.008881396739130402,
+      "itl_p95": 0.010118367739130494,
+      "itl_p99": 0.010504387695652153,
+      "avg_completion_tokens": 24.94
+    },
+    "burst": {
+      "requests": 400.0,
+      "concurrency": 64.0,
+      "elapsed_s": 8.348032834000001,
+      "throughput_rps": 47.91547996443828,
+      "throughput_tokens_s": 1208.4284047031335,
+      "latency_p50": 1.2878896249999983,
+      "latency_p95": 1.4887900420000015,
+      "latency_p99": 1.4966215419999997,
+      "ttft_p50": 0.42211495900000173,
+      "ttft_p95": 0.6363972499999981,
+      "ttft_p99": 0.6413539159999999,
+      "itl_p50": 0.036708081521739,
+      "itl_p95": 0.04801844747826091,
+      "itl_p99": 0.053710755434782605,
+      "avg_completion_tokens": 25.22
+    }
+  },
+  "stats_before": {
+    "config": {
+      "model_name": "sshleifer/tiny-gpt2",
+      "use_toy_backend": true,
+      "device": "cuda",
+      "kv_block_size": 16,
+      "kv_total_blocks": 4096,
+      "max_queue_size": 2048,
+      "max_decode_batch_size": 16,
+      "max_num_batched_tokens": 1024,
+      "prefill_chunk_size": 128,
+      "scheduler_sleep_s": 0.001,
+      "prefix_cache_max_entries": 4096,
+      "prefix_cache_max_tokens": 500000,
+      "prefix_cache_min_tokens": 16,
+      "prefix_cache_lengths": [
+        64,
+        128,
+        256,
+        512
+      ],
+      "enable_cuda_graph_decode": true,
+      "cuda_graph_batch_sizes": [
+        1,
+        2,
+        4,
+        8,
+        16
+      ],
+      "enable_triton_rmsnorm": true,
+      "default_max_new_tokens": 128,
+      "default_temperature": 0.0
+    },
+    "kv": {
+      "total_blocks": 4096,
+      "free_blocks": 4016,
+      "live_blocks": 80,
+      "block_size": 16,
+      "used_tokens": 1280,
+      "total_live_capacity_tokens": 1280,
+      "internal_waste_tokens": 0,
+      "block_utilization": 1.0,
+      "memory_pressure": 0.01953125
+    },
+    "prefix_cache": {
+      "entries": 74,
+      "cached_tokens": 32028,
+      "lookups": 400,
+      "hits": 397,
+      "hit_rate": 0.9925
+    },
+    "scheduler": {
+      "inflight": 0,
+      "queue_depth": 0
+    },
+    "backend": {
+      "type": "ToyDecoderBackend",
+      "device": "cuda",
+      "cuda_graph_decode": true,
+      "triton_kernel_enabled": true,
+      "cuda_cpp_extension_loaded": true
+    }
+  },
+  "stats_after": {
+    "config": {
+      "model_name": "sshleifer/tiny-gpt2",
+      "use_toy_backend": true,
+      "device": "cuda",
+      "kv_block_size": 16,
+      "kv_total_blocks": 4096,
+      "max_queue_size": 2048,
+      "max_decode_batch_size": 16,
+      "max_num_batched_tokens": 1024,
+      "prefill_chunk_size": 128,
+      "scheduler_sleep_s": 0.001,
+      "prefix_cache_max_entries": 4096,
+      "prefix_cache_max_tokens": 500000,
+      "prefix_cache_min_tokens": 16,
+      "prefix_cache_lengths": [
+        64,
+        128,
+        256,
+        512
+      ],
+      "enable_cuda_graph_decode": true,
+      "cuda_graph_batch_sizes": [
+        1,
+        2,
+        4,
+        8,
+        16
+      ],
+      "enable_triton_rmsnorm": true,
+      "default_max_new_tokens": 128,
+      "default_temperature": 0.0
+    },
+    "kv": {
+      "total_blocks": 4096,
+      "free_blocks": 4016,
+      "live_blocks": 80,
+      "block_size": 16,
+      "used_tokens": 1280,
+      "total_live_capacity_tokens": 1280,
+      "internal_waste_tokens": 0,
+      "block_utilization": 1.0,
+      "memory_pressure": 0.01953125
+    },
+    "prefix_cache": {
+      "entries": 74,
+      "cached_tokens": 32028,
+      "lookups": 1600,
+      "hits": 1597,
+      "hit_rate": 0.998125
+    },
+    "scheduler": {
+      "inflight": 0,
+      "queue_depth": 0
+    },
+    "backend": {
+      "type": "ToyDecoderBackend",
+      "device": "cuda",
+      "cuda_graph_decode": true,
+      "triton_kernel_enabled": true,
+      "cuda_cpp_extension_loaded": true
+    }
+  }
+}

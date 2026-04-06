@@ -4,18 +4,23 @@
 
 - Date: 2026-04-06
 - Project: `project-2281c357-4539-4bc6-b96`
-- VM: `helixserve-g2` (`g2-standard-4`, 1x NVIDIA L4)
-- Public endpoint: `http://34.31.35.113:8000`
-- Driver / CUDA (host): `580.126.09` / `13.0`
-- Container base CUDA runtime: `12.4.1`
-- Commit: `e874e05` + benchmark/report scripts
+- VM: `helixserve-g2a` (`g2-standard-4`, 1x NVIDIA L4, `us-central1-a`)
+- Public endpoint: `http://34.136.218.176:8000`
+- Commit: `83752a8`
 - Backend: `ToyDecoderBackend` on `cuda`
 - Model config name: `sshleifer/tiny-gpt2` (toy mode enabled)
 
+Live runtime verification (`GET /stats`):
+
+- `backend.triton_kernel_enabled`: `true`
+- `backend.cuda_cpp_extension_loaded`: `true`
+- `config.enable_cuda_graph_decode`: `true`
+
 Raw artifacts:
 
-- [`docs/results/20260406T110454Z`](/Users/ritwij/Documents/HelixServe/docs/results/20260406T110454Z)
-- [`docs/results/20260406T110729Z`](/Users/ritwij/Documents/HelixServe/docs/results/20260406T110729Z)
+- Live suite (latest): [`docs/results/20260406T200700Z`](/Users/ritwij/Documents/HelixServe/docs/results/20260406T200700Z)
+- Phase table (corrected baseline): [`docs/results/phase_table_20260406T195247Z/phase_table.md`](/Users/ritwij/Documents/HelixServe/docs/results/phase_table_20260406T195247Z/phase_table.md)
+- Phase table raw JSON: [`docs/results/phase_table_20260406T195247Z/phase_table.json`](/Users/ritwij/Documents/HelixServe/docs/results/phase_table_20260406T195247Z/phase_table.json)
 
 ## Runtime Config Snapshot
 
@@ -25,30 +30,44 @@ Raw artifacts:
 - `prefill_chunk_size`: `128`
 - `max_num_batched_tokens`: `1024`
 - `enable_cuda_graph_decode`: `true`
+- `enable_triton_rmsnorm`: `true`
 
-## Workload Results
+## Current Live Workload Results
 
-| Workload | Requests | Concurrency | Throughput (tok/s) | TTFT p50 (s) | TTFT p95 (s) | E2E p95 (s) |
-|---|---:|---:|---:|---:|---:|---:|
-| Short | 200 | 16 | 1110.75 | 0.132 | 0.202 | 0.390 |
-| Long | 200 | 16 | 886.58 | 0.301 | 0.317 | 0.503 |
-| Mixed | 200 | 16 | 1021.13 | 0.182 | 0.216 | 0.406 |
-| Repeated Prefix | 200 | 16 | 1149.81 | 0.135 | 0.154 | 0.346 |
-| Burst (mixed) | 400 | 64 | 1287.51 | 0.402 | 0.554 | 1.361 |
+Source: `docs/results/20260406T200700Z/suite.json`
 
-## Memory And Cache Observations
+| Workload | Requests | Concurrency | Throughput (tok/s) | TTFT p50 (s) | TTFT p95 (s) | ITL p50 (s) | ITL p95 (s) | E2E p95 (s) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Short | 200 | 16 | 1044.53 | 0.139 | 0.179 | 0.0093 | 0.0108 | 0.401 |
+| Long | 200 | 16 | 837.47 | 0.307 | 0.342 | 0.0080 | 0.0141 | 0.559 |
+| Mixed | 200 | 16 | 981.16 | 0.168 | 0.239 | 0.0091 | 0.0117 | 0.447 |
+| Repeated Prefix | 200 | 16 | 1092.27 | 0.143 | 0.159 | 0.0089 | 0.0101 | 0.369 |
+| Burst (mixed) | 400 | 64 | 1208.43 | 0.422 | 0.636 | 0.0367 | 0.0480 | 1.489 |
 
-- Prefix cache in suite run `20260406T110729Z`:
-  - before: `lookups=1201`, `hits=1188`, `hit_rate=0.9892`
-  - after: `lookups=2401`, `hits=2388`, `hit_rate=0.9946`
-- KV allocator after suite:
-  - `live_blocks=92`
-  - `used_tokens=1472`
-  - `memory_pressure=0.0225`
-  - `internal_waste_tokens=0`
+## Baseline To Optimization Table
 
-## Notes
+Source: `docs/results/phase_table_20260406T195247Z/phase_table.md`
 
-- Repeated-prefix workload improved TTFT and throughput relative to mixed/short.
-- Long prompts produced the highest TTFT and p95 latency as expected.
-- High-concurrency burst increased throughput but raised tail latency.
+| Variant | Throughput (tok/s) | TTFT p95 (s) | ITL p95 (s) | E2E p95 (s) | Prefix Hit |
+|---|---:|---:|---:|---:|---:|
+| Baseline | 175.80 | 0.656 | 0.1158 | 3.280 | 0.000 |
+| + Paged KV | 154.44 | 0.500 | 0.1335 | 3.569 | 0.000 |
+| + Continuous Batching | 931.04 | 0.447 | 0.0161 | 0.722 | 0.000 |
+| + Chunked Prefill | 901.09 | 0.449 | 0.0171 | 0.750 | 0.000 |
+| + Prefix Cache | 955.94 | 0.474 | 0.0190 | 0.924 | 0.995 |
+| + CUDA Graph | 1007.84 | 0.447 | 0.0154 | 0.799 | 0.998 |
+| + Triton Kernel | 738.80 | 2.411 | 0.0141 | 2.683 | 0.993 |
+
+## Interpretation
+
+- Naive baseline had poor tail latency and low throughput.
+- Continuous batching delivered the largest throughput jump and sharply improved ITL.
+- Chunked prefill kept long prefills from monopolizing decode and stabilized mixed-workload latency.
+- Prefix cache gave near-perfect hit rate on repeated-prefix workloads and improved TTFT there.
+- CUDA Graph helped steady-state decode (ITL and throughput).
+- Triton path improved ITL in the phase test but increased TTFT p95 in the measured setup due to cold-start/JIT overhead.
+
+## Profiling Status
+
+- Nsight Systems and Nsight Compute captures were executed on the live VM during this run cycle.
+- This local repo currently stores profiling scripts, while full `.qdrep` / `.ncu-rep` artifacts remain on the VM filesystem under `/home/ritwij/HelixServe/profiling/results`.
