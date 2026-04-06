@@ -3,7 +3,6 @@ FROM nvidia/cuda:12.4.1-cudnn-devel-ubuntu22.04
 ENV DEBIAN_FRONTEND=noninteractive \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    HELIX_BUILD_CUDA_EXT=1 \
     TORCH_CUDA_ARCH_LIST=8.9
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -14,7 +13,8 @@ WORKDIR /app
 COPY . /app
 
 RUN python3 -m pip install --upgrade pip && \
-    python3 -m pip install .
+    HELIX_BUILD_CUDA_EXT=0 python3 -m pip install . && \
+    HELIX_BUILD_CUDA_EXT=1 python3 -m pip install --no-build-isolation --no-deps --force-reinstall .
 
 EXPOSE 8000
 
