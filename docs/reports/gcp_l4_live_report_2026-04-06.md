@@ -84,3 +84,8 @@ Source: `docs/results/phase_table_20260406T195247Z/phase_table.md`
 
 - Nsight Systems and Nsight Compute captures were executed on the live VM during this run cycle.
 - This local repo currently stores profiling scripts, while full `.qdrep` / `.ncu-rep` artifacts remain on the VM filesystem under `/home/ritwij/HelixServe/profiling/results`.
+
+## Demo Narration Mode
+
+- Final narrated demo uses a product-demonstration voice (no first-person singular wording).
+- Validation utility: `scripts/check_product_voiceover.py`.
