@@ -10,7 +10,10 @@ def build_backend(config: EngineConfig) -> DecoderBackend:
     if config.use_toy_backend:
         return ToyDecoderBackend(
             device=config.device,
-            config=ToyBackendConfig(enable_cuda_graph_decode=config.enable_cuda_graph_decode),
+            config=ToyBackendConfig(
+                enable_cuda_graph_decode=config.enable_cuda_graph_decode,
+                enable_triton_rmsnorm=config.enable_triton_rmsnorm,
+            ),
         )
 
     try:
@@ -19,5 +22,8 @@ def build_backend(config: EngineConfig) -> DecoderBackend:
         # Fallback keeps the engine bootable even if model download/auth fails.
         return ToyDecoderBackend(
             device=config.device,
-            config=ToyBackendConfig(enable_cuda_graph_decode=config.enable_cuda_graph_decode),
+            config=ToyBackendConfig(
+                enable_cuda_graph_decode=config.enable_cuda_graph_decode,
+                enable_triton_rmsnorm=config.enable_triton_rmsnorm,
+            ),
         )

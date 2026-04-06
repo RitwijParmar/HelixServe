@@ -45,3 +45,7 @@ class DecoderBackend(ABC):
     @property
     def supports_cuda_graph_decode(self) -> bool:
         return False
+
+    @property
+    def uses_triton_kernel(self) -> bool:
+        return False

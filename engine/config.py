@@ -30,6 +30,7 @@ class EngineConfig:
     # Decode optimizations
     enable_cuda_graph_decode: bool = True
     cuda_graph_batch_sizes: List[int] = field(default_factory=lambda: [1, 2, 4, 8, 16])
+    enable_triton_rmsnorm: bool = True
 
     # Runtime defaults
     default_max_new_tokens: int = 128

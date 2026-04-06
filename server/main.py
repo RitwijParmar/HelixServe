@@ -42,6 +42,19 @@ def _env_flag(name: str, default: bool) -> bool:
     return value.lower() in {"1", "true", "yes", "on"}
 
 
+def _env_int_list(name: str, default: list[int]) -> list[int]:
+    value = os.getenv(name)
+    if value is None or value.strip() == "":
+        return default
+    out: list[int] = []
+    for part in value.split(","):
+        part = part.strip()
+        if not part:
+            continue
+        out.append(int(part))
+    return out or default
+
+
 def load_config_from_env() -> EngineConfig:
     return EngineConfig(
         model_name=os.getenv("HELIX_MODEL", "sshleifer/tiny-gpt2"),
@@ -53,7 +66,12 @@ def load_config_from_env() -> EngineConfig:
         max_decode_batch_size=int(os.getenv("HELIX_MAX_DECODE_BATCH", "16")),
         max_num_batched_tokens=int(os.getenv("HELIX_MAX_BATCHED_TOKENS", "1024")),
         prefill_chunk_size=int(os.getenv("HELIX_PREFILL_CHUNK", "128")),
+        prefix_cache_max_entries=int(os.getenv("HELIX_PREFIX_MAX_ENTRIES", "4096")),
+        prefix_cache_max_tokens=int(os.getenv("HELIX_PREFIX_MAX_TOKENS", "500000")),
+        prefix_cache_min_tokens=int(os.getenv("HELIX_PREFIX_MIN_TOKENS", "16")),
+        prefix_cache_lengths=_env_int_list("HELIX_PREFIX_LENGTHS", [64, 128, 256, 512]),
         enable_cuda_graph_decode=_env_flag("HELIX_ENABLE_CUDA_GRAPH", True),
+        enable_triton_rmsnorm=_env_flag("HELIX_ENABLE_TRITON_RMSNORM", True),
         default_max_new_tokens=int(os.getenv("HELIX_DEFAULT_MAX_NEW_TOKENS", "128")),
         default_temperature=float(os.getenv("HELIX_DEFAULT_TEMPERATURE", "0.0")),
     )

@@ -7,6 +7,7 @@ import torch
 import torch.nn as nn
 
 from engine.cuda_graph import CUDAGraphDecodeCache
+from kernels.rmsnorm_triton import rms_norm_reference, rms_norm_triton
 from model.backend import DecoderBackend
 from model.tokenizer import ByteTokenizer
 
@@ -16,6 +17,7 @@ class ToyBackendConfig:
     hidden_size: int = 512
     seed: int = 7
     enable_cuda_graph_decode: bool = True
+    enable_triton_rmsnorm: bool = True
 
 
 class TinyGRULM(nn.Module):
@@ -53,6 +55,12 @@ class ToyDecoderBackend(DecoderBackend):
         self._model.eval()
         self._hidden_size = cfg.hidden_size
         self._states: Dict[str, torch.Tensor] = {}
+        self._use_triton_rmsnorm = cfg.enable_triton_rmsnorm and self._device.type == "cuda"
+        self._rms_weight = torch.ones(
+            (self._hidden_size,),
+            device=self._device,
+            dtype=torch.float32,
+        )
 
         self._graph_cache: CUDAGraphDecodeCache | None = None
         if cfg.enable_cuda_graph_decode and self._device.type == "cuda":
@@ -66,6 +74,10 @@ class ToyDecoderBackend(DecoderBackend):
     @property
     def supports_cuda_graph_decode(self) -> bool:
         return self._graph_cache is not None
+
+    @property
+    def uses_triton_kernel(self) -> bool:
+        return self._use_triton_rmsnorm
 
     def tokenize(self, text: str) -> List[int]:
         return self._tokenizer.encode(text)
@@ -94,7 +106,20 @@ class ToyDecoderBackend(DecoderBackend):
         tokens_t: torch.Tensor,
         hidden_t: torch.Tensor,
     ) -> tuple[torch.Tensor, torch.Tensor]:
-        return self._model(tokens_t, hidden_t)
+        x = self._model.embedding(tokens_t)
+        out, hidden_out = self._model.gru(x, hidden_t)
+        last_hidden = out[:, -1, :].to(dtype=torch.float32)
+
+        if self._use_triton_rmsnorm:
+            try:
+                last_hidden = rms_norm_triton(last_hidden, self._rms_weight)
+            except Exception:
+                # Keep serving if Triton codegen fails at runtime.
+                self._use_triton_rmsnorm = False
+                last_hidden = rms_norm_reference(last_hidden, self._rms_weight)
+
+        logits_last = self._model.lm_head(last_hidden)
+        return logits_last.unsqueeze(1), hidden_out
 
     @staticmethod
     def _sample_next(logits: torch.Tensor, temperature: float, top_k: int) -> torch.Tensor:

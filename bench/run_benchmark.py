@@ -69,6 +69,11 @@ async def _run_single(
         "latency": latency,
         "ttft": ttft or latency,
         "completion_tokens": float(completion_tokens),
+        "itl": (
+            max(latency - (ttft or latency), 0.0) / max(completion_tokens - 1, 1)
+            if completion_tokens > 1
+            else 0.0
+        ),
     }
 
 
@@ -105,6 +110,7 @@ async def run_benchmark(
 
     latencies = [r["latency"] for r in results]
     ttfts = [r["ttft"] for r in results]
+    itls = [r["itl"] for r in results]
     total_tokens = sum(r["completion_tokens"] for r in results)
 
     return {
@@ -119,6 +125,9 @@ async def run_benchmark(
         "ttft_p50": percentile(ttfts, 0.50),
         "ttft_p95": percentile(ttfts, 0.95),
         "ttft_p99": percentile(ttfts, 0.99),
+        "itl_p50": percentile(itls, 0.50),
+        "itl_p95": percentile(itls, 0.95),
+        "itl_p99": percentile(itls, 0.99),
         "avg_completion_tokens": statistics.mean([r["completion_tokens"] for r in results])
         if results
         else 0.0,

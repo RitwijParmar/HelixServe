@@ -1,11 +1,13 @@
-FROM nvidia/cuda:12.4.1-cudnn-runtime-ubuntu22.04
+FROM nvidia/cuda:12.4.1-cudnn-devel-ubuntu22.04
 
 ENV DEBIAN_FRONTEND=noninteractive \
     PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+    PYTHONUNBUFFERED=1 \
+    HELIX_BUILD_CUDA_EXT=1 \
+    TORCH_CUDA_ARCH_LIST=8.9
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    python3 python3-pip python3-venv git curl && \
+    python3 python3-pip python3-venv python3-dev build-essential ninja-build git curl && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app

@@ -124,6 +124,7 @@ class HelixEngine:
                 "type": type(self.backend).__name__,
                 "device": self.backend.device,
                 "cuda_graph_decode": self.backend.supports_cuda_graph_decode,
+                "triton_kernel_enabled": self.backend.uses_triton_kernel,
                 "cuda_cpp_extension_loaded": has_compiled_cuda_ext(),
             },
         }
