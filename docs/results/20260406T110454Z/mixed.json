@@ -1,0 +1,14 @@
+{
+  "requests": 200.0,
+  "concurrency": 16.0,
+  "elapsed_s": 4.931264791,
+  "throughput_rps": 40.55754628407258,
+  "throughput_tokens_s": 1021.2390154329476,
+  "latency_p50": 0.378966084,
+  "latency_p95": 0.4204962919999997,
+  "latency_p99": 0.42713291600000014,
+  "ttft_p50": 0.17722124999999989,
+  "ttft_p95": 0.22919779200000034,
+  "ttft_p99": 0.23453912499999996,
+  "avg_completion_tokens": 25.18
+}

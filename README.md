@@ -85,6 +85,12 @@ Suggested workloads:
 - `--mode mixed`
 - `--mode repeated_prefix`
 
+Run the full live suite (short/long/mixed/repeated-prefix/burst) and save artifacts:
+
+```bash
+python -m bench.run_live_suite --url http://127.0.0.1:8000 --stream
+```
+
 ## Triton Kernel Benchmark
 
 ```bash
@@ -136,6 +142,24 @@ Deploy container to VM:
 
 ```bash
 PROJECT_ID=<your-project> INSTANCE_NAME=<vm-name> bash deploy/deploy_to_gcp_vm.sh
+```
+
+Configure VM idle auto-shutdown (default: 30 minutes idle):
+
+```bash
+PROJECT_ID=<your-project> INSTANCE_NAME=<vm-name> bash deploy/setup_idle_shutdown_on_vm.sh
+```
+
+Disable auto-shutdown temporarily on the VM:
+
+```bash
+sudo touch /var/lib/helixserve/disable_idle_shutdown
+```
+
+Re-enable auto-shutdown:
+
+```bash
+sudo rm -f /var/lib/helixserve/disable_idle_shutdown
 ```
 
 ## Tests

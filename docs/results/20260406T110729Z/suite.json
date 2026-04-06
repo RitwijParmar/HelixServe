@@ -1,0 +1,233 @@
+{
+  "timestamp_utc": "20260406T110729Z",
+  "url": "http://34.31.35.113:8000",
+  "stream": true,
+  "max_tokens": 64,
+  "temperature": 0.0,
+  "workloads": [
+    {
+      "name": "short",
+      "mode": "short",
+      "requests": 200,
+      "concurrency": 16
+    },
+    {
+      "name": "long",
+      "mode": "long",
+      "requests": 200,
+      "concurrency": 16
+    },
+    {
+      "name": "mixed",
+      "mode": "mixed",
+      "requests": 200,
+      "concurrency": 16
+    },
+    {
+      "name": "repeated_prefix",
+      "mode": "repeated_prefix",
+      "requests": 200,
+      "concurrency": 16
+    },
+    {
+      "name": "burst",
+      "mode": "mixed",
+      "requests": 400,
+      "concurrency": 64
+    }
+  ],
+  "reports": {
+    "short": {
+      "requests": 200.0,
+      "concurrency": 16.0,
+      "elapsed_s": 4.321400542,
+      "throughput_rps": 46.28129192288142,
+      "throughput_tokens_s": 1110.7510061491541,
+      "latency_p50": 0.32927941699999996,
+      "latency_p95": 0.389773208,
+      "latency_p99": 0.39576562499999995,
+      "ttft_p50": 0.1317263339999999,
+      "ttft_p95": 0.20228012500000003,
+      "ttft_p99": 0.204814,
+      "avg_completion_tokens": 24.0
+    },
+    "long": {
+      "requests": 200.0,
+      "concurrency": 16.0,
+      "elapsed_s": 6.316428749999999,
+      "throughput_rps": 31.663461730649622,
+      "throughput_tokens_s": 886.5769284581894,
+      "latency_p50": 0.49372087500000106,
+      "latency_p95": 0.5026232090000002,
+      "latency_p99": 0.5087892920000003,
+      "ttft_p50": 0.30111925000000017,
+      "ttft_p95": 0.31743529199999987,
+      "ttft_p99": 0.32120887499999995,
+      "avg_completion_tokens": 28.0
+    },
+    "mixed": {
+      "requests": 200.0,
+      "concurrency": 16.0,
+      "elapsed_s": 4.955303333,
+      "throughput_rps": 40.36079863529113,
+      "throughput_tokens_s": 1021.1282054728657,
+      "latency_p50": 0.38528466599999867,
+      "latency_p95": 0.4062768339999998,
+      "latency_p99": 0.41107662499999975,
+      "ttft_p50": 0.18188295800000098,
+      "ttft_p95": 0.21638504200000064,
+      "ttft_p99": 0.22144337499999978,
+      "avg_completion_tokens": 25.3
+    },
+    "repeated_prefix": {
+      "requests": 200.0,
+      "concurrency": 16.0,
+      "elapsed_s": 4.348539250000002,
+      "throughput_rps": 45.99245597242796,
+      "throughput_tokens_s": 1149.811399310699,
+      "latency_p50": 0.333781333000001,
+      "latency_p95": 0.34567987500000186,
+      "latency_p99": 0.370152583000003,
+      "ttft_p50": 0.1349557499999996,
+      "ttft_p95": 0.15364337500000147,
+      "ttft_p99": 0.18002491700000078,
+      "avg_completion_tokens": 25.0
+    },
+    "burst": {
+      "requests": 400.0,
+      "concurrency": 64.0,
+      "elapsed_s": 7.794886333000001,
+      "throughput_rps": 51.315693765357686,
+      "throughput_tokens_s": 1287.5107565728244,
+      "latency_p50": 1.2118080409999976,
+      "latency_p95": 1.361458209000002,
+      "latency_p99": 1.3694685,
+      "ttft_p50": 0.40249283300000016,
+      "ttft_p95": 0.5538687919999994,
+      "ttft_p99": 0.5680821250000001,
+      "avg_completion_tokens": 25.09
+    }
+  },
+  "stats_before": {
+    "config": {
+      "model_name": "sshleifer/tiny-gpt2",
+      "use_toy_backend": true,
+      "device": "cuda",
+      "kv_block_size": 16,
+      "kv_total_blocks": 4096,
+      "max_queue_size": 2048,
+      "max_decode_batch_size": 16,
+      "max_num_batched_tokens": 1024,
+      "prefill_chunk_size": 128,
+      "scheduler_sleep_s": 0.001,
+      "prefix_cache_max_entries": 4096,
+      "prefix_cache_max_tokens": 500000,
+      "prefix_cache_min_tokens": 16,
+      "prefix_cache_lengths": [
+        64,
+        128,
+        256,
+        512
+      ],
+      "enable_cuda_graph_decode": true,
+      "cuda_graph_batch_sizes": [
+        1,
+        2,
+        4,
+        8,
+        16
+      ],
+      "default_max_new_tokens": 128,
+      "default_temperature": 0.0
+    },
+    "kv": {
+      "total_blocks": 4096,
+      "free_blocks": 4004,
+      "live_blocks": 92,
+      "block_size": 16,
+      "used_tokens": 1472,
+      "total_live_capacity_tokens": 1472,
+      "internal_waste_tokens": 0,
+      "block_utilization": 1.0,
+      "memory_pressure": 0.0224609375
+    },
+    "prefix_cache": {
+      "entries": 74,
+      "cached_tokens": 32028,
+      "lookups": 1201,
+      "hits": 1188,
+      "hit_rate": 0.9891756869275604
+    },
+    "scheduler": {
+      "inflight": 0,
+      "queue_depth": 0
+    },
+    "backend": {
+      "type": "ToyDecoderBackend",
+      "device": "cuda",
+      "cuda_graph_decode": true,
+      "cuda_cpp_extension_loaded": false
+    }
+  },
+  "stats_after": {
+    "config": {
+      "model_name": "sshleifer/tiny-gpt2",
+      "use_toy_backend": true,
+      "device": "cuda",
+      "kv_block_size": 16,
+      "kv_total_blocks": 4096,
+      "max_queue_size": 2048,
+      "max_decode_batch_size": 16,
+      "max_num_batched_tokens": 1024,
+      "prefill_chunk_size": 128,
+      "scheduler_sleep_s": 0.001,
+      "prefix_cache_max_entries": 4096,
+      "prefix_cache_max_tokens": 500000,
+      "prefix_cache_min_tokens": 16,
+      "prefix_cache_lengths": [
+        64,
+        128,
+        256,
+        512
+      ],
+      "enable_cuda_graph_decode": true,
+      "cuda_graph_batch_sizes": [
+        1,
+        2,
+        4,
+        8,
+        16
+      ],
+      "default_max_new_tokens": 128,
+      "default_temperature": 0.0
+    },
+    "kv": {
+      "total_blocks": 4096,
+      "free_blocks": 4004,
+      "live_blocks": 92,
+      "block_size": 16,
+      "used_tokens": 1472,
+      "total_live_capacity_tokens": 1472,
+      "internal_waste_tokens": 0,
+      "block_utilization": 1.0,
+      "memory_pressure": 0.0224609375
+    },
+    "prefix_cache": {
+      "entries": 74,
+      "cached_tokens": 32028,
+      "lookups": 2401,
+      "hits": 2388,
+      "hit_rate": 0.994585589337776
+    },
+    "scheduler": {
+      "inflight": 0,
+      "queue_depth": 0
+    },
+    "backend": {
+      "type": "ToyDecoderBackend",
+      "device": "cuda",
+      "cuda_graph_decode": true,
+      "cuda_cpp_extension_loaded": false
+    }
+  }
+}
