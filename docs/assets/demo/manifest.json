@@ -1,0 +1,16 @@
+{
+  "generated_at_utc": "2026-04-06 20:18:58 UTC",
+  "endpoint": "http://34.136.218.176:8000",
+  "screenshots": [
+    "docs/assets/demo/screenshots/01_healthz.png",
+    "docs/assets/demo/screenshots/02_runtime_stats.png",
+    "docs/assets/demo/screenshots/03_completion.png",
+    "docs/assets/demo/screenshots/04_live_suite.png",
+    "docs/assets/demo/screenshots/05_phase_table.png",
+    "docs/assets/demo/screenshots/06_tests.png"
+  ],
+  "gif": "docs/assets/demo/helixserve_demo.gif",
+  "mp4": "docs/assets/demo/helixserve_demo.mp4",
+  "suite_source": "docs/results/20260406T200700Z/suite.json",
+  "phase_table_source": "docs/results/phase_table_20260406T195247Z/phase_table.md"
+}

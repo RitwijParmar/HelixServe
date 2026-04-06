@@ -6,7 +6,7 @@
 - Project: `project-2281c357-4539-4bc6-b96`
 - VM: `helixserve-g2a` (`g2-standard-4`, 1x NVIDIA L4, `us-central1-a`)
 - Public endpoint: `http://34.136.218.176:8000`
-- Commit: `83752a8`
+- Commit: `main` (includes live suite + phase table + demo assets)
 - Backend: `ToyDecoderBackend` on `cuda`
 - Model config name: `sshleifer/tiny-gpt2` (toy mode enabled)
 
@@ -18,9 +18,12 @@ Live runtime verification (`GET /stats`):
 
 Raw artifacts:
 
-- Live suite (latest): [`docs/results/20260406T200700Z`](/Users/ritwij/Documents/HelixServe/docs/results/20260406T200700Z)
-- Phase table (corrected baseline): [`docs/results/phase_table_20260406T195247Z/phase_table.md`](/Users/ritwij/Documents/HelixServe/docs/results/phase_table_20260406T195247Z/phase_table.md)
-- Phase table raw JSON: [`docs/results/phase_table_20260406T195247Z/phase_table.json`](/Users/ritwij/Documents/HelixServe/docs/results/phase_table_20260406T195247Z/phase_table.json)
+- Live suite (latest): [`docs/results/20260406T200700Z`](../results/20260406T200700Z)
+- Phase table (corrected baseline): [`docs/results/phase_table_20260406T195247Z/phase_table.md`](../results/phase_table_20260406T195247Z/phase_table.md)
+- Phase table raw JSON: [`docs/results/phase_table_20260406T195247Z/phase_table.json`](../results/phase_table_20260406T195247Z/phase_table.json)
+- Demo video: [`docs/assets/demo/helixserve_demo.mp4`](../assets/demo/helixserve_demo.mp4)
+- Demo GIF: [`docs/assets/demo/helixserve_demo.gif`](../assets/demo/helixserve_demo.gif)
+- Screenshots: [`docs/assets/demo/screenshots`](../assets/demo/screenshots)
 
 ## Runtime Config Snapshot
 
@@ -57,6 +60,15 @@ Source: `docs/results/phase_table_20260406T195247Z/phase_table.md`
 | + Prefix Cache | 955.94 | 0.474 | 0.0190 | 0.924 | 0.995 |
 | + CUDA Graph | 1007.84 | 0.447 | 0.0154 | 0.799 | 0.998 |
 | + Triton Kernel | 738.80 | 2.411 | 0.0141 | 2.683 | 0.993 |
+
+## Demo Evidence
+
+![Health Check](../assets/demo/screenshots/01_healthz.png)
+![Runtime Stats](../assets/demo/screenshots/02_runtime_stats.png)
+![Completion Request](../assets/demo/screenshots/03_completion.png)
+![Benchmark Summary](../assets/demo/screenshots/04_live_suite.png)
+![Phase Table](../assets/demo/screenshots/05_phase_table.png)
+![Test Suite](../assets/demo/screenshots/06_tests.png)
 
 ## Interpretation
 

@@ -91,6 +91,31 @@ Run the full live suite (short/long/mixed/repeated-prefix/burst) and save artifa
 python -m bench.run_live_suite --url http://127.0.0.1:8000 --stream
 ```
 
+## Demo Video And Screenshots
+
+Generated demo artifacts:
+
+- MP4 demo video: [`docs/assets/demo/helixserve_demo.mp4`](docs/assets/demo/helixserve_demo.mp4)
+- GIF preview: [`docs/assets/demo/helixserve_demo.gif`](docs/assets/demo/helixserve_demo.gif)
+- Asset manifest: [`docs/assets/demo/manifest.json`](docs/assets/demo/manifest.json)
+
+![HelixServe Demo GIF](docs/assets/demo/helixserve_demo.gif)
+
+Screenshots used in README/report:
+
+![Health Check](docs/assets/demo/screenshots/01_healthz.png)
+![Runtime Stats](docs/assets/demo/screenshots/02_runtime_stats.png)
+![Completion Request](docs/assets/demo/screenshots/03_completion.png)
+![Benchmark Summary](docs/assets/demo/screenshots/04_live_suite.png)
+![Phase Table](docs/assets/demo/screenshots/05_phase_table.png)
+![Test Suite](docs/assets/demo/screenshots/06_tests.png)
+
+Regenerate all demo assets from a live endpoint:
+
+```bash
+.venv/bin/python scripts/generate_demo_assets.py --url http://34.136.218.176:8000
+```
+
 ## Triton Kernel Benchmark
 
 ```bash
