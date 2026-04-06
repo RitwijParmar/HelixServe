@@ -1,0 +1,14 @@
+{
+  "video": "docs/assets/demo/final/helixserve_linkedin_final.mp4",
+  "codec": "h264",
+  "audio_codec": "aac",
+  "fps": 30.0,
+  "size": [
+    1920,
+    1080
+  ],
+  "duration_s": 86.0,
+  "valid_1080p": true,
+  "valid_duration_window": true,
+  "has_audio": true
+}
