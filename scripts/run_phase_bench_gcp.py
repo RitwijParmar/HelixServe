@@ -32,8 +32,8 @@ PHASES: List[PhaseVariant] = [
     PhaseVariant(
         name="Baseline",
         env={
-            "HELIX_KV_TOTAL_BLOCKS": "1",
-            "HELIX_KV_BLOCK_SIZE": "65536",
+            "HELIX_KV_TOTAL_BLOCKS": "64",
+            "HELIX_KV_BLOCK_SIZE": "1024",
             "HELIX_MAX_DECODE_BATCH": "1",
             "HELIX_MAX_BATCHED_TOKENS": "65536",
             "HELIX_PREFILL_CHUNK": "65536",

@@ -7,6 +7,6 @@ ncu \
   --set full \
   --target-processes all \
   --export "$OUT" \
-  python3 -m kernels.benchmark_rmsnorm --rows 4096 --cols 4096
+  python3 scripts/profile_rmsnorm.py
 
 echo "Wrote ${OUT}.ncu-rep"

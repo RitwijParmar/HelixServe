@@ -1,0 +1,1077 @@
+{
+  "timestamp_utc": "20260406T194905Z",
+  "project": "project-2281c357-4539-4bc6-b96",
+  "zone": "us-central1-a",
+  "instance": "helixserve-g2a",
+  "url": "http://34.136.218.176:8000",
+  "image": "helixserve:latest",
+  "requests": 250,
+  "concurrency": 24,
+  "max_tokens": 64,
+  "rows": [
+    {
+      "variant": "Baseline",
+      "throughput_tokens_s": 0.0,
+      "ttft_p50": 0.14746429200000044,
+      "ttft_p95": 0.5850385830000011,
+      "itl_p50": 0.0,
+      "itl_p95": 0.0,
+      "latency_p95": 0.5892801670000001,
+      "kv_utilization": 1.0,
+      "fragmentation_tokens": 0,
+      "prefix_hit_rate": 0.0,
+      "repeated_prefix_ttft_p95": 0.15108466599999915,
+      "cuda_graph_decode": false,
+      "triton_kernel_enabled": false,
+      "cuda_cpp_extension_loaded": true,
+      "stats_before": {
+        "config": {
+          "model_name": "sshleifer/tiny-gpt2",
+          "use_toy_backend": true,
+          "device": "cuda",
+          "kv_block_size": 65536,
+          "kv_total_blocks": 1,
+          "max_queue_size": 2048,
+          "max_decode_batch_size": 1,
+          "max_num_batched_tokens": 65536,
+          "prefill_chunk_size": 65536,
+          "scheduler_sleep_s": 0.001,
+          "prefix_cache_max_entries": 4096,
+          "prefix_cache_max_tokens": 500000,
+          "prefix_cache_min_tokens": 1000000000,
+          "prefix_cache_lengths": [
+            64,
+            128,
+            256,
+            512
+          ],
+          "enable_cuda_graph_decode": false,
+          "cuda_graph_batch_sizes": [
+            1,
+            2,
+            4,
+            8,
+            16
+          ],
+          "enable_triton_rmsnorm": false,
+          "default_max_new_tokens": 128,
+          "default_temperature": 0.0
+        },
+        "kv": {
+          "total_blocks": 1,
+          "free_blocks": 1,
+          "live_blocks": 0,
+          "block_size": 65536,
+          "used_tokens": 0,
+          "total_live_capacity_tokens": 0,
+          "internal_waste_tokens": 0,
+          "block_utilization": 1.0,
+          "memory_pressure": 0.0
+        },
+        "prefix_cache": {
+          "entries": 0,
+          "cached_tokens": 0,
+          "lookups": 0,
+          "hits": 0,
+          "hit_rate": 0.0
+        },
+        "scheduler": {
+          "inflight": 0,
+          "queue_depth": 0
+        },
+        "backend": {
+          "type": "ToyDecoderBackend",
+          "device": "cuda",
+          "cuda_graph_decode": false,
+          "triton_kernel_enabled": false,
+          "cuda_cpp_extension_loaded": true
+        }
+      },
+      "stats_after": {
+        "config": {
+          "model_name": "sshleifer/tiny-gpt2",
+          "use_toy_backend": true,
+          "device": "cuda",
+          "kv_block_size": 65536,
+          "kv_total_blocks": 1,
+          "max_queue_size": 2048,
+          "max_decode_batch_size": 1,
+          "max_num_batched_tokens": 65536,
+          "prefill_chunk_size": 65536,
+          "scheduler_sleep_s": 0.001,
+          "prefix_cache_max_entries": 4096,
+          "prefix_cache_max_tokens": 500000,
+          "prefix_cache_min_tokens": 1000000000,
+          "prefix_cache_lengths": [
+            64,
+            128,
+            256,
+            512
+          ],
+          "enable_cuda_graph_decode": false,
+          "cuda_graph_batch_sizes": [
+            1,
+            2,
+            4,
+            8,
+            16
+          ],
+          "enable_triton_rmsnorm": false,
+          "default_max_new_tokens": 128,
+          "default_temperature": 0.0
+        },
+        "kv": {
+          "total_blocks": 1,
+          "free_blocks": 1,
+          "live_blocks": 0,
+          "block_size": 65536,
+          "used_tokens": 0,
+          "total_live_capacity_tokens": 0,
+          "internal_waste_tokens": 0,
+          "block_utilization": 1.0,
+          "memory_pressure": 0.0
+        },
+        "prefix_cache": {
+          "entries": 0,
+          "cached_tokens": 0,
+          "lookups": 297,
+          "hits": 0,
+          "hit_rate": 0.0
+        },
+        "scheduler": {
+          "inflight": 0,
+          "queue_depth": 0
+        },
+        "backend": {
+          "type": "ToyDecoderBackend",
+          "device": "cuda",
+          "cuda_graph_decode": false,
+          "triton_kernel_enabled": false,
+          "cuda_cpp_extension_loaded": true
+        }
+      },
+      "env": {
+        "HELIX_KV_TOTAL_BLOCKS": "1",
+        "HELIX_KV_BLOCK_SIZE": "65536",
+        "HELIX_MAX_DECODE_BATCH": "1",
+        "HELIX_MAX_BATCHED_TOKENS": "65536",
+        "HELIX_PREFILL_CHUNK": "65536",
+        "HELIX_PREFIX_MIN_TOKENS": "1000000000",
+        "HELIX_ENABLE_CUDA_GRAPH": "0",
+        "HELIX_ENABLE_TRITON_RMSNORM": "0"
+      }
+    },
+    {
+      "variant": "+ Paged KV",
+      "throughput_tokens_s": 153.01967990892473,
+      "ttft_p50": 0.22496354199999757,
+      "ttft_p95": 0.5297089170000007,
+      "itl_p50": 0.15988107065217388,
+      "itl_p95": 0.1628871720869565,
+      "latency_p95": 4.277258750000001,
+      "kv_utilization": 1.0,
+      "fragmentation_tokens": 0,
+      "prefix_hit_rate": 0.0,
+      "repeated_prefix_ttft_p95": 0.19835633299999955,
+      "cuda_graph_decode": false,
+      "triton_kernel_enabled": false,
+      "cuda_cpp_extension_loaded": true,
+      "stats_before": {
+        "config": {
+          "model_name": "sshleifer/tiny-gpt2",
+          "use_toy_backend": true,
+          "device": "cuda",
+          "kv_block_size": 16,
+          "kv_total_blocks": 4096,
+          "max_queue_size": 2048,
+          "max_decode_batch_size": 1,
+          "max_num_batched_tokens": 65536,
+          "prefill_chunk_size": 65536,
+          "scheduler_sleep_s": 0.001,
+          "prefix_cache_max_entries": 4096,
+          "prefix_cache_max_tokens": 500000,
+          "prefix_cache_min_tokens": 1000000000,
+          "prefix_cache_lengths": [
+            64,
+            128,
+            256,
+            512
+          ],
+          "enable_cuda_graph_decode": false,
+          "cuda_graph_batch_sizes": [
+            1,
+            2,
+            4,
+            8,
+            16
+          ],
+          "enable_triton_rmsnorm": false,
+          "default_max_new_tokens": 128,
+          "default_temperature": 0.0
+        },
+        "kv": {
+          "total_blocks": 4096,
+          "free_blocks": 4096,
+          "live_blocks": 0,
+          "block_size": 16,
+          "used_tokens": 0,
+          "total_live_capacity_tokens": 0,
+          "internal_waste_tokens": 0,
+          "block_utilization": 1.0,
+          "memory_pressure": 0.0
+        },
+        "prefix_cache": {
+          "entries": 0,
+          "cached_tokens": 0,
+          "lookups": 0,
+          "hits": 0,
+          "hit_rate": 0.0
+        },
+        "scheduler": {
+          "inflight": 0,
+          "queue_depth": 0
+        },
+        "backend": {
+          "type": "ToyDecoderBackend",
+          "device": "cuda",
+          "cuda_graph_decode": false,
+          "triton_kernel_enabled": false,
+          "cuda_cpp_extension_loaded": true
+        }
+      },
+      "stats_after": {
+        "config": {
+          "model_name": "sshleifer/tiny-gpt2",
+          "use_toy_backend": true,
+          "device": "cuda",
+          "kv_block_size": 16,
+          "kv_total_blocks": 4096,
+          "max_queue_size": 2048,
+          "max_decode_batch_size": 1,
+          "max_num_batched_tokens": 65536,
+          "prefill_chunk_size": 65536,
+          "scheduler_sleep_s": 0.001,
+          "prefix_cache_max_entries": 4096,
+          "prefix_cache_max_tokens": 500000,
+          "prefix_cache_min_tokens": 1000000000,
+          "prefix_cache_lengths": [
+            64,
+            128,
+            256,
+            512
+          ],
+          "enable_cuda_graph_decode": false,
+          "cuda_graph_batch_sizes": [
+            1,
+            2,
+            4,
+            8,
+            16
+          ],
+          "enable_triton_rmsnorm": false,
+          "default_max_new_tokens": 128,
+          "default_temperature": 0.0
+        },
+        "kv": {
+          "total_blocks": 4096,
+          "free_blocks": 4096,
+          "live_blocks": 0,
+          "block_size": 16,
+          "used_tokens": 0,
+          "total_live_capacity_tokens": 0,
+          "internal_waste_tokens": 0,
+          "block_utilization": 1.0,
+          "memory_pressure": 0.0
+        },
+        "prefix_cache": {
+          "entries": 0,
+          "cached_tokens": 0,
+          "lookups": 450,
+          "hits": 0,
+          "hit_rate": 0.0
+        },
+        "scheduler": {
+          "inflight": 0,
+          "queue_depth": 0
+        },
+        "backend": {
+          "type": "ToyDecoderBackend",
+          "device": "cuda",
+          "cuda_graph_decode": false,
+          "triton_kernel_enabled": false,
+          "cuda_cpp_extension_loaded": true
+        }
+      },
+      "env": {
+        "HELIX_KV_TOTAL_BLOCKS": "4096",
+        "HELIX_KV_BLOCK_SIZE": "16",
+        "HELIX_MAX_DECODE_BATCH": "1",
+        "HELIX_MAX_BATCHED_TOKENS": "65536",
+        "HELIX_PREFILL_CHUNK": "65536",
+        "HELIX_PREFIX_MIN_TOKENS": "1000000000",
+        "HELIX_ENABLE_CUDA_GRAPH": "0",
+        "HELIX_ENABLE_TRITON_RMSNORM": "0"
+      }
+    },
+    {
+      "variant": "+ Continuous Batching",
+      "throughput_tokens_s": 950.6071173512242,
+      "ttft_p50": 0.2737799169999988,
+      "ttft_p95": 0.512582167000005,
+      "itl_p50": 0.014204855086956429,
+      "itl_p95": 0.01858579347826111,
+      "latency_p95": 0.842986959000001,
+      "kv_utilization": 1.0,
+      "fragmentation_tokens": 0,
+      "prefix_hit_rate": 0.0,
+      "repeated_prefix_ttft_p95": 0.191278582999999,
+      "cuda_graph_decode": false,
+      "triton_kernel_enabled": false,
+      "cuda_cpp_extension_loaded": true,
+      "stats_before": {
+        "config": {
+          "model_name": "sshleifer/tiny-gpt2",
+          "use_toy_backend": true,
+          "device": "cuda",
+          "kv_block_size": 16,
+          "kv_total_blocks": 4096,
+          "max_queue_size": 2048,
+          "max_decode_batch_size": 16,
+          "max_num_batched_tokens": 65536,
+          "prefill_chunk_size": 65536,
+          "scheduler_sleep_s": 0.001,
+          "prefix_cache_max_entries": 4096,
+          "prefix_cache_max_tokens": 500000,
+          "prefix_cache_min_tokens": 1000000000,
+          "prefix_cache_lengths": [
+            64,
+            128,
+            256,
+            512
+          ],
+          "enable_cuda_graph_decode": false,
+          "cuda_graph_batch_sizes": [
+            1,
+            2,
+            4,
+            8,
+            16
+          ],
+          "enable_triton_rmsnorm": false,
+          "default_max_new_tokens": 128,
+          "default_temperature": 0.0
+        },
+        "kv": {
+          "total_blocks": 4096,
+          "free_blocks": 4096,
+          "live_blocks": 0,
+          "block_size": 16,
+          "used_tokens": 0,
+          "total_live_capacity_tokens": 0,
+          "internal_waste_tokens": 0,
+          "block_utilization": 1.0,
+          "memory_pressure": 0.0
+        },
+        "prefix_cache": {
+          "entries": 0,
+          "cached_tokens": 0,
+          "lookups": 0,
+          "hits": 0,
+          "hit_rate": 0.0
+        },
+        "scheduler": {
+          "inflight": 0,
+          "queue_depth": 0
+        },
+        "backend": {
+          "type": "ToyDecoderBackend",
+          "device": "cuda",
+          "cuda_graph_decode": false,
+          "triton_kernel_enabled": false,
+          "cuda_cpp_extension_loaded": true
+        }
+      },
+      "stats_after": {
+        "config": {
+          "model_name": "sshleifer/tiny-gpt2",
+          "use_toy_backend": true,
+          "device": "cuda",
+          "kv_block_size": 16,
+          "kv_total_blocks": 4096,
+          "max_queue_size": 2048,
+          "max_decode_batch_size": 16,
+          "max_num_batched_tokens": 65536,
+          "prefill_chunk_size": 65536,
+          "scheduler_sleep_s": 0.001,
+          "prefix_cache_max_entries": 4096,
+          "prefix_cache_max_tokens": 500000,
+          "prefix_cache_min_tokens": 1000000000,
+          "prefix_cache_lengths": [
+            64,
+            128,
+            256,
+            512
+          ],
+          "enable_cuda_graph_decode": false,
+          "cuda_graph_batch_sizes": [
+            1,
+            2,
+            4,
+            8,
+            16
+          ],
+          "enable_triton_rmsnorm": false,
+          "default_max_new_tokens": 128,
+          "default_temperature": 0.0
+        },
+        "kv": {
+          "total_blocks": 4096,
+          "free_blocks": 4096,
+          "live_blocks": 0,
+          "block_size": 16,
+          "used_tokens": 0,
+          "total_live_capacity_tokens": 0,
+          "internal_waste_tokens": 0,
+          "block_utilization": 1.0,
+          "memory_pressure": 0.0
+        },
+        "prefix_cache": {
+          "entries": 0,
+          "cached_tokens": 0,
+          "lookups": 450,
+          "hits": 0,
+          "hit_rate": 0.0
+        },
+        "scheduler": {
+          "inflight": 0,
+          "queue_depth": 0
+        },
+        "backend": {
+          "type": "ToyDecoderBackend",
+          "device": "cuda",
+          "cuda_graph_decode": false,
+          "triton_kernel_enabled": false,
+          "cuda_cpp_extension_loaded": true
+        }
+      },
+      "env": {
+        "HELIX_KV_TOTAL_BLOCKS": "4096",
+        "HELIX_KV_BLOCK_SIZE": "16",
+        "HELIX_MAX_DECODE_BATCH": "16",
+        "HELIX_MAX_BATCHED_TOKENS": "65536",
+        "HELIX_PREFILL_CHUNK": "65536",
+        "HELIX_PREFIX_MIN_TOKENS": "1000000000",
+        "HELIX_ENABLE_CUDA_GRAPH": "0",
+        "HELIX_ENABLE_TRITON_RMSNORM": "0"
+      }
+    },
+    {
+      "variant": "+ Chunked Prefill",
+      "throughput_tokens_s": 931.3825605051416,
+      "ttft_p50": 0.23513649999999586,
+      "ttft_p95": 0.4569605000000081,
+      "itl_p50": 0.015577298913043429,
+      "itl_p95": 0.019339737347826753,
+      "latency_p95": 0.8807212079999971,
+      "kv_utilization": 1.0,
+      "fragmentation_tokens": 0,
+      "prefix_hit_rate": 0.0,
+      "repeated_prefix_ttft_p95": 0.1946988329999897,
+      "cuda_graph_decode": false,
+      "triton_kernel_enabled": false,
+      "cuda_cpp_extension_loaded": true,
+      "stats_before": {
+        "config": {
+          "model_name": "sshleifer/tiny-gpt2",
+          "use_toy_backend": true,
+          "device": "cuda",
+          "kv_block_size": 16,
+          "kv_total_blocks": 4096,
+          "max_queue_size": 2048,
+          "max_decode_batch_size": 16,
+          "max_num_batched_tokens": 1024,
+          "prefill_chunk_size": 128,
+          "scheduler_sleep_s": 0.001,
+          "prefix_cache_max_entries": 4096,
+          "prefix_cache_max_tokens": 500000,
+          "prefix_cache_min_tokens": 1000000000,
+          "prefix_cache_lengths": [
+            64,
+            128,
+            256,
+            512
+          ],
+          "enable_cuda_graph_decode": false,
+          "cuda_graph_batch_sizes": [
+            1,
+            2,
+            4,
+            8,
+            16
+          ],
+          "enable_triton_rmsnorm": false,
+          "default_max_new_tokens": 128,
+          "default_temperature": 0.0
+        },
+        "kv": {
+          "total_blocks": 4096,
+          "free_blocks": 4096,
+          "live_blocks": 0,
+          "block_size": 16,
+          "used_tokens": 0,
+          "total_live_capacity_tokens": 0,
+          "internal_waste_tokens": 0,
+          "block_utilization": 1.0,
+          "memory_pressure": 0.0
+        },
+        "prefix_cache": {
+          "entries": 0,
+          "cached_tokens": 0,
+          "lookups": 0,
+          "hits": 0,
+          "hit_rate": 0.0
+        },
+        "scheduler": {
+          "inflight": 0,
+          "queue_depth": 0
+        },
+        "backend": {
+          "type": "ToyDecoderBackend",
+          "device": "cuda",
+          "cuda_graph_decode": false,
+          "triton_kernel_enabled": false,
+          "cuda_cpp_extension_loaded": true
+        }
+      },
+      "stats_after": {
+        "config": {
+          "model_name": "sshleifer/tiny-gpt2",
+          "use_toy_backend": true,
+          "device": "cuda",
+          "kv_block_size": 16,
+          "kv_total_blocks": 4096,
+          "max_queue_size": 2048,
+          "max_decode_batch_size": 16,
+          "max_num_batched_tokens": 1024,
+          "prefill_chunk_size": 128,
+          "scheduler_sleep_s": 0.001,
+          "prefix_cache_max_entries": 4096,
+          "prefix_cache_max_tokens": 500000,
+          "prefix_cache_min_tokens": 1000000000,
+          "prefix_cache_lengths": [
+            64,
+            128,
+            256,
+            512
+          ],
+          "enable_cuda_graph_decode": false,
+          "cuda_graph_batch_sizes": [
+            1,
+            2,
+            4,
+            8,
+            16
+          ],
+          "enable_triton_rmsnorm": false,
+          "default_max_new_tokens": 128,
+          "default_temperature": 0.0
+        },
+        "kv": {
+          "total_blocks": 4096,
+          "free_blocks": 4096,
+          "live_blocks": 0,
+          "block_size": 16,
+          "used_tokens": 0,
+          "total_live_capacity_tokens": 0,
+          "internal_waste_tokens": 0,
+          "block_utilization": 1.0,
+          "memory_pressure": 0.0
+        },
+        "prefix_cache": {
+          "entries": 0,
+          "cached_tokens": 0,
+          "lookups": 450,
+          "hits": 0,
+          "hit_rate": 0.0
+        },
+        "scheduler": {
+          "inflight": 0,
+          "queue_depth": 0
+        },
+        "backend": {
+          "type": "ToyDecoderBackend",
+          "device": "cuda",
+          "cuda_graph_decode": false,
+          "triton_kernel_enabled": false,
+          "cuda_cpp_extension_loaded": true
+        }
+      },
+      "env": {
+        "HELIX_KV_TOTAL_BLOCKS": "4096",
+        "HELIX_KV_BLOCK_SIZE": "16",
+        "HELIX_MAX_DECODE_BATCH": "16",
+        "HELIX_MAX_BATCHED_TOKENS": "1024",
+        "HELIX_PREFILL_CHUNK": "128",
+        "HELIX_PREFIX_MIN_TOKENS": "1000000000",
+        "HELIX_ENABLE_CUDA_GRAPH": "0",
+        "HELIX_ENABLE_TRITON_RMSNORM": "0"
+      }
+    },
+    {
+      "variant": "+ Prefix Cache",
+      "throughput_tokens_s": 996.822504057581,
+      "ttft_p50": 0.22921083299999623,
+      "ttft_p95": 0.470549874999989,
+      "itl_p50": 0.01386950726087029,
+      "itl_p95": 0.01927832430434784,
+      "latency_p95": 0.9113234589999877,
+      "kv_utilization": 1.0,
+      "fragmentation_tokens": 0,
+      "prefix_hit_rate": 0.9844444444444445,
+      "repeated_prefix_ttft_p95": 0.15828433300001166,
+      "cuda_graph_decode": false,
+      "triton_kernel_enabled": false,
+      "cuda_cpp_extension_loaded": true,
+      "stats_before": {
+        "config": {
+          "model_name": "sshleifer/tiny-gpt2",
+          "use_toy_backend": true,
+          "device": "cuda",
+          "kv_block_size": 16,
+          "kv_total_blocks": 4096,
+          "max_queue_size": 2048,
+          "max_decode_batch_size": 16,
+          "max_num_batched_tokens": 1024,
+          "prefill_chunk_size": 128,
+          "scheduler_sleep_s": 0.001,
+          "prefix_cache_max_entries": 4096,
+          "prefix_cache_max_tokens": 500000,
+          "prefix_cache_min_tokens": 16,
+          "prefix_cache_lengths": [
+            64,
+            128,
+            256,
+            512
+          ],
+          "enable_cuda_graph_decode": false,
+          "cuda_graph_batch_sizes": [
+            1,
+            2,
+            4,
+            8,
+            16
+          ],
+          "enable_triton_rmsnorm": false,
+          "default_max_new_tokens": 128,
+          "default_temperature": 0.0
+        },
+        "kv": {
+          "total_blocks": 4096,
+          "free_blocks": 4096,
+          "live_blocks": 0,
+          "block_size": 16,
+          "used_tokens": 0,
+          "total_live_capacity_tokens": 0,
+          "internal_waste_tokens": 0,
+          "block_utilization": 1.0,
+          "memory_pressure": 0.0
+        },
+        "prefix_cache": {
+          "entries": 0,
+          "cached_tokens": 0,
+          "lookups": 0,
+          "hits": 0,
+          "hit_rate": 0.0
+        },
+        "scheduler": {
+          "inflight": 0,
+          "queue_depth": 0
+        },
+        "backend": {
+          "type": "ToyDecoderBackend",
+          "device": "cuda",
+          "cuda_graph_decode": false,
+          "triton_kernel_enabled": false,
+          "cuda_cpp_extension_loaded": true
+        }
+      },
+      "stats_after": {
+        "config": {
+          "model_name": "sshleifer/tiny-gpt2",
+          "use_toy_backend": true,
+          "device": "cuda",
+          "kv_block_size": 16,
+          "kv_total_blocks": 4096,
+          "max_queue_size": 2048,
+          "max_decode_batch_size": 16,
+          "max_num_batched_tokens": 1024,
+          "prefill_chunk_size": 128,
+          "scheduler_sleep_s": 0.001,
+          "prefix_cache_max_entries": 4096,
+          "prefix_cache_max_tokens": 500000,
+          "prefix_cache_min_tokens": 16,
+          "prefix_cache_lengths": [
+            64,
+            128,
+            256,
+            512
+          ],
+          "enable_cuda_graph_decode": false,
+          "cuda_graph_batch_sizes": [
+            1,
+            2,
+            4,
+            8,
+            16
+          ],
+          "enable_triton_rmsnorm": false,
+          "default_max_new_tokens": 128,
+          "default_temperature": 0.0
+        },
+        "kv": {
+          "total_blocks": 4096,
+          "free_blocks": 4022,
+          "live_blocks": 74,
+          "block_size": 16,
+          "used_tokens": 1184,
+          "total_live_capacity_tokens": 1184,
+          "internal_waste_tokens": 0,
+          "block_utilization": 1.0,
+          "memory_pressure": 0.01806640625
+        },
+        "prefix_cache": {
+          "entries": 74,
+          "cached_tokens": 32028,
+          "lookups": 450,
+          "hits": 443,
+          "hit_rate": 0.9844444444444445
+        },
+        "scheduler": {
+          "inflight": 0,
+          "queue_depth": 0
+        },
+        "backend": {
+          "type": "ToyDecoderBackend",
+          "device": "cuda",
+          "cuda_graph_decode": false,
+          "triton_kernel_enabled": false,
+          "cuda_cpp_extension_loaded": true
+        }
+      },
+      "env": {
+        "HELIX_KV_TOTAL_BLOCKS": "4096",
+        "HELIX_KV_BLOCK_SIZE": "16",
+        "HELIX_MAX_DECODE_BATCH": "16",
+        "HELIX_MAX_BATCHED_TOKENS": "1024",
+        "HELIX_PREFILL_CHUNK": "128",
+        "HELIX_PREFIX_MIN_TOKENS": "16",
+        "HELIX_ENABLE_CUDA_GRAPH": "0",
+        "HELIX_ENABLE_TRITON_RMSNORM": "0"
+      }
+    },
+    {
+      "variant": "+ CUDA Graph",
+      "throughput_tokens_s": 1044.0445191433375,
+      "ttft_p50": 0.21023120799998196,
+      "ttft_p95": 0.5581305419999865,
+      "itl_p50": 0.012783632703703748,
+      "itl_p95": 0.020030851434783066,
+      "latency_p95": 1.0410503339999764,
+      "kv_utilization": 1.0,
+      "fragmentation_tokens": 0,
+      "prefix_hit_rate": 0.9466666666666667,
+      "repeated_prefix_ttft_p95": 0.1567953749999731,
+      "cuda_graph_decode": true,
+      "triton_kernel_enabled": false,
+      "cuda_cpp_extension_loaded": true,
+      "stats_before": {
+        "config": {
+          "model_name": "sshleifer/tiny-gpt2",
+          "use_toy_backend": true,
+          "device": "cuda",
+          "kv_block_size": 16,
+          "kv_total_blocks": 4096,
+          "max_queue_size": 2048,
+          "max_decode_batch_size": 16,
+          "max_num_batched_tokens": 1024,
+          "prefill_chunk_size": 128,
+          "scheduler_sleep_s": 0.001,
+          "prefix_cache_max_entries": 4096,
+          "prefix_cache_max_tokens": 500000,
+          "prefix_cache_min_tokens": 16,
+          "prefix_cache_lengths": [
+            64,
+            128,
+            256,
+            512
+          ],
+          "enable_cuda_graph_decode": true,
+          "cuda_graph_batch_sizes": [
+            1,
+            2,
+            4,
+            8,
+            16
+          ],
+          "enable_triton_rmsnorm": false,
+          "default_max_new_tokens": 128,
+          "default_temperature": 0.0
+        },
+        "kv": {
+          "total_blocks": 4096,
+          "free_blocks": 4096,
+          "live_blocks": 0,
+          "block_size": 16,
+          "used_tokens": 0,
+          "total_live_capacity_tokens": 0,
+          "internal_waste_tokens": 0,
+          "block_utilization": 1.0,
+          "memory_pressure": 0.0
+        },
+        "prefix_cache": {
+          "entries": 0,
+          "cached_tokens": 0,
+          "lookups": 0,
+          "hits": 0,
+          "hit_rate": 0.0
+        },
+        "scheduler": {
+          "inflight": 0,
+          "queue_depth": 0
+        },
+        "backend": {
+          "type": "ToyDecoderBackend",
+          "device": "cuda",
+          "cuda_graph_decode": true,
+          "triton_kernel_enabled": false,
+          "cuda_cpp_extension_loaded": true
+        }
+      },
+      "stats_after": {
+        "config": {
+          "model_name": "sshleifer/tiny-gpt2",
+          "use_toy_backend": true,
+          "device": "cuda",
+          "kv_block_size": 16,
+          "kv_total_blocks": 4096,
+          "max_queue_size": 2048,
+          "max_decode_batch_size": 16,
+          "max_num_batched_tokens": 1024,
+          "prefill_chunk_size": 128,
+          "scheduler_sleep_s": 0.001,
+          "prefix_cache_max_entries": 4096,
+          "prefix_cache_max_tokens": 500000,
+          "prefix_cache_min_tokens": 16,
+          "prefix_cache_lengths": [
+            64,
+            128,
+            256,
+            512
+          ],
+          "enable_cuda_graph_decode": true,
+          "cuda_graph_batch_sizes": [
+            1,
+            2,
+            4,
+            8,
+            16
+          ],
+          "enable_triton_rmsnorm": false,
+          "default_max_new_tokens": 128,
+          "default_temperature": 0.0
+        },
+        "kv": {
+          "total_blocks": 4096,
+          "free_blocks": 3998,
+          "live_blocks": 98,
+          "block_size": 16,
+          "used_tokens": 1568,
+          "total_live_capacity_tokens": 1568,
+          "internal_waste_tokens": 0,
+          "block_utilization": 1.0,
+          "memory_pressure": 0.02392578125
+        },
+        "prefix_cache": {
+          "entries": 74,
+          "cached_tokens": 32028,
+          "lookups": 450,
+          "hits": 426,
+          "hit_rate": 0.9466666666666667
+        },
+        "scheduler": {
+          "inflight": 0,
+          "queue_depth": 0
+        },
+        "backend": {
+          "type": "ToyDecoderBackend",
+          "device": "cuda",
+          "cuda_graph_decode": true,
+          "triton_kernel_enabled": false,
+          "cuda_cpp_extension_loaded": true
+        }
+      },
+      "env": {
+        "HELIX_KV_TOTAL_BLOCKS": "4096",
+        "HELIX_KV_BLOCK_SIZE": "16",
+        "HELIX_MAX_DECODE_BATCH": "16",
+        "HELIX_MAX_BATCHED_TOKENS": "1024",
+        "HELIX_PREFILL_CHUNK": "128",
+        "HELIX_PREFIX_MIN_TOKENS": "16",
+        "HELIX_ENABLE_CUDA_GRAPH": "1",
+        "HELIX_ENABLE_TRITON_RMSNORM": "0"
+      }
+    },
+    {
+      "variant": "+ Triton Kernel",
+      "throughput_tokens_s": 794.0095347528254,
+      "ttft_p50": 0.20400445900000364,
+      "ttft_p95": 2.468176542000009,
+      "itl_p50": 0.012896947478261065,
+      "itl_p95": 0.018262617739129957,
+      "latency_p95": 2.892271041000015,
+      "kv_utilization": 1.0,
+      "fragmentation_tokens": 0,
+      "prefix_hit_rate": 0.9466666666666667,
+      "repeated_prefix_ttft_p95": 0.16010712499999613,
+      "cuda_graph_decode": true,
+      "triton_kernel_enabled": true,
+      "cuda_cpp_extension_loaded": true,
+      "stats_before": {
+        "config": {
+          "model_name": "sshleifer/tiny-gpt2",
+          "use_toy_backend": true,
+          "device": "cuda",
+          "kv_block_size": 16,
+          "kv_total_blocks": 4096,
+          "max_queue_size": 2048,
+          "max_decode_batch_size": 16,
+          "max_num_batched_tokens": 1024,
+          "prefill_chunk_size": 128,
+          "scheduler_sleep_s": 0.001,
+          "prefix_cache_max_entries": 4096,
+          "prefix_cache_max_tokens": 500000,
+          "prefix_cache_min_tokens": 16,
+          "prefix_cache_lengths": [
+            64,
+            128,
+            256,
+            512
+          ],
+          "enable_cuda_graph_decode": true,
+          "cuda_graph_batch_sizes": [
+            1,
+            2,
+            4,
+            8,
+            16
+          ],
+          "enable_triton_rmsnorm": true,
+          "default_max_new_tokens": 128,
+          "default_temperature": 0.0
+        },
+        "kv": {
+          "total_blocks": 4096,
+          "free_blocks": 4096,
+          "live_blocks": 0,
+          "block_size": 16,
+          "used_tokens": 0,
+          "total_live_capacity_tokens": 0,
+          "internal_waste_tokens": 0,
+          "block_utilization": 1.0,
+          "memory_pressure": 0.0
+        },
+        "prefix_cache": {
+          "entries": 0,
+          "cached_tokens": 0,
+          "lookups": 0,
+          "hits": 0,
+          "hit_rate": 0.0
+        },
+        "scheduler": {
+          "inflight": 0,
+          "queue_depth": 0
+        },
+        "backend": {
+          "type": "ToyDecoderBackend",
+          "device": "cuda",
+          "cuda_graph_decode": true,
+          "triton_kernel_enabled": true,
+          "cuda_cpp_extension_loaded": true
+        }
+      },
+      "stats_after": {
+        "config": {
+          "model_name": "sshleifer/tiny-gpt2",
+          "use_toy_backend": true,
+          "device": "cuda",
+          "kv_block_size": 16,
+          "kv_total_blocks": 4096,
+          "max_queue_size": 2048,
+          "max_decode_batch_size": 16,
+          "max_num_batched_tokens": 1024,
+          "prefill_chunk_size": 128,
+          "scheduler_sleep_s": 0.001,
+          "prefix_cache_max_entries": 4096,
+          "prefix_cache_max_tokens": 500000,
+          "prefix_cache_min_tokens": 16,
+          "prefix_cache_lengths": [
+            64,
+            128,
+            256,
+            512
+          ],
+          "enable_cuda_graph_decode": true,
+          "cuda_graph_batch_sizes": [
+            1,
+            2,
+            4,
+            8,
+            16
+          ],
+          "enable_triton_rmsnorm": true,
+          "default_max_new_tokens": 128,
+          "default_temperature": 0.0
+        },
+        "kv": {
+          "total_blocks": 4096,
+          "free_blocks": 3998,
+          "live_blocks": 98,
+          "block_size": 16,
+          "used_tokens": 1568,
+          "total_live_capacity_tokens": 1568,
+          "internal_waste_tokens": 0,
+          "block_utilization": 1.0,
+          "memory_pressure": 0.02392578125
+        },
+        "prefix_cache": {
+          "entries": 74,
+          "cached_tokens": 32028,
+          "lookups": 450,
+          "hits": 426,
+          "hit_rate": 0.9466666666666667
+        },
+        "scheduler": {
+          "inflight": 0,
+          "queue_depth": 0
+        },
+        "backend": {
+          "type": "ToyDecoderBackend",
+          "device": "cuda",
+          "cuda_graph_decode": true,
+          "triton_kernel_enabled": true,
+          "cuda_cpp_extension_loaded": true
+        }
+      },
+      "env": {
+        "HELIX_KV_TOTAL_BLOCKS": "4096",
+        "HELIX_KV_BLOCK_SIZE": "16",
+        "HELIX_MAX_DECODE_BATCH": "16",
+        "HELIX_MAX_BATCHED_TOKENS": "1024",
+        "HELIX_PREFILL_CHUNK": "128",
+        "HELIX_PREFIX_MIN_TOKENS": "16",
+        "HELIX_ENABLE_CUDA_GRAPH": "1",
+        "HELIX_ENABLE_TRITON_RMSNORM": "1"
+      }
+    }
+  ]
+}
