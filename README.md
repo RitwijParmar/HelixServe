@@ -1,6 +1,6 @@
 # HelixServe
 
-HelixServe is a mini LLM serving engine focused on runtime internals, not chatbot product surface.
+HelixServe is a mini LLM serving engine focused on runtime internals
 
 ## Language Split
 
