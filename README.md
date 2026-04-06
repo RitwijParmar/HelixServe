@@ -98,6 +98,8 @@ Generated demo artifacts:
 - LinkedIn final cut (with voiceover): [`docs/assets/demo/final/helixserve_linkedin_final.mp4`](docs/assets/demo/final/helixserve_linkedin_final.mp4)
 - Final cut timeline: [`docs/assets/demo/final/timeline.json`](docs/assets/demo/final/timeline.json)
 - Final cut voiceover script: [`docs/assets/demo/final/voiceover_script.txt`](docs/assets/demo/final/voiceover_script.txt)
+- Voiceover validation: [`docs/assets/demo/final/voiceover_validation.json`](docs/assets/demo/final/voiceover_validation.json)
+- Video verification: [`docs/assets/demo/final/video_verification.json`](docs/assets/demo/final/video_verification.json)
 - MP4 demo video: [`docs/assets/demo/helixserve_demo.mp4`](docs/assets/demo/helixserve_demo.mp4)
 - GIF preview: [`docs/assets/demo/helixserve_demo.gif`](docs/assets/demo/helixserve_demo.gif)
 - Asset manifest: [`docs/assets/demo/manifest.json`](docs/assets/demo/manifest.json)
@@ -129,6 +131,12 @@ Validate narration style (no first-person singular words):
 
 ```bash
 .venv/bin/python scripts/check_product_voiceover.py --path docs/assets/demo/final/voiceover_script.txt
+```
+
+Validate final video technical specs:
+
+```bash
+.venv/bin/python scripts/verify_final_video.py --video docs/assets/demo/final/helixserve_linkedin_final.mp4
 ```
 
 ## Triton Kernel Benchmark
