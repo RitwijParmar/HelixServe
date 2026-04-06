@@ -1,0 +1,55 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "helixserve"
+version = "0.1.0"
+description = "Mini LLM serving engine with paged KV cache, continuous batching, chunked prefill, prefix caching, CUDA graph decode, and Triton kernel"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [
+  { name = "Ritwij Parmar" }
+]
+dependencies = [
+  "fastapi>=0.111.0",
+  "uvicorn>=0.30.0",
+  "pydantic>=2.8.0",
+  "httpx>=0.27.0",
+  "prometheus-client>=0.20.0",
+  "numpy>=1.26.0",
+  "torch>=2.3.0",
+  "transformers>=4.42.0",
+  "triton>=2.3.0; platform_system == 'Linux'",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.2.0",
+  "pytest-asyncio>=0.23.0",
+  "ruff>=0.5.0",
+]
+
+[project.scripts]
+helixserve = "server.main:run"
+helixbench = "bench.run_benchmark:main"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["server*", "engine*", "cache*", "model*", "metrics*", "kernels*", "bench*"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B"]
+ignore = ["E501"]
