@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import re
 import subprocess
 from pathlib import Path
 from typing import Any, Dict, List
@@ -26,11 +27,12 @@ HEIGHT = 1080
 FPS = 30
 
 VOICE = "en-IN-NeerjaNeural"
+FORBIDDEN_PRONOUNS = ("i", "me", "my", "mine", "myself")
 
 
 VOICEOVER_SCRIPT = (
     "Quick one. This is HelixServe, a mini LLM serving engine running on a single NVIDIA L4. "
-    "I built this as a runtime internals project, not another chatbot wrapper. "
+    "This is a runtime internals project, not another chatbot wrapper. "
     "The baseline problem was simple: contiguous KV allocation wastes memory, long prefills block short requests, "
     "and decode launches repeat too much CPU work. "
     "Now this is the live system. Health is green, and stats confirm CUDA Graph decode, Triton kernel path, "
@@ -38,7 +40,7 @@ VOICEOVER_SCRIPT = (
     "The architecture is split cleanly into server, scheduler, paged KV cache, kernels, and extension, "
     "so each optimization is measurable. "
     "In the phase table, baseline throughput is around one seventy six tokens per second. "
-    "With continuous batching, chunked prefill, and CUDA Graph, we reach around one thousand eight tokens per second "
+    "With continuous batching, chunked prefill, and CUDA Graph, throughput reaches around one thousand eight tokens per second "
     "in this setup, with a major inter token latency improvement. "
     "Concrete example: if one request has a long prompt and another is a short chat turn, "
     "chunked prefill helps prevent the long one from monopolizing decode. "
@@ -260,6 +262,14 @@ async def _synthesize_voiceover(text: str, out_path: Path) -> None:
     await communicate.save(str(out_path))
 
 
+def _assert_product_voice(text: str) -> None:
+    tokens = re.findall(r"[A-Za-z']+", text.lower())
+    forbidden = sorted({token for token in tokens if token in FORBIDDEN_PRONOUNS})
+    if forbidden:
+        joined = ", ".join(forbidden)
+        raise ValueError(f"Voiceover script contains forbidden first-person words: {joined}")
+
+
 def _timeline_payload() -> Dict[str, Any]:
     payload: Dict[str, Any] = {"fps": FPS, "scenes": []}
     cursor = 0.0
@@ -283,6 +293,7 @@ def _timeline_payload() -> Dict[str, Any]:
 
 def build_video(keep_silent: bool = False) -> None:
     FINAL_DIR.mkdir(parents=True, exist_ok=True)
+    _assert_product_voice(VOICEOVER_SCRIPT)
 
     voiceover_txt = FINAL_DIR / "voiceover_script.txt"
     voiceover_mp3 = FINAL_DIR / "voiceover_en_in_neerja.mp3"
