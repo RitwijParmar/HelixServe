@@ -32,6 +32,7 @@
 - Continuous batching with request-policy grouping.
 - Prefill/decode split with chunked prefill.
 - Backpressure and rejection on queue/memory pressure.
+- Decode-time `cu_seqlens` build call (via optional CUDA C++ extension).
 
 ### `engine/cuda_graph.py`
 
@@ -55,6 +56,12 @@
 - Fused RMSNorm Triton kernel.
 - Numerical parity check vs reference implementation.
 - Isolated kernel benchmark utility.
+
+### `cuda_ext/csrc/cu_seqlens*`
+
+- Optional CUDA C++ extension (`helix_cuda_ext`) exposed to Python.
+- Implements `build_cu_seqlens(lengths)` for decode batch prep.
+- Used by scheduler on CUDA paths, with Python fallback when extension isn't built.
 
 ## Request Lifecycle
 

@@ -79,6 +79,11 @@ class EngineMetrics:
             "Current decode batch size",
             registry=self.registry,
         )
+        self.active_decode_batched_tokens = Gauge(
+            "helixserve_active_decode_batched_tokens",
+            "Total decode tokens in the active batch",
+            registry=self.registry,
+        )
         self.kv_used_tokens = Gauge(
             "helixserve_kv_used_tokens",
             "Used tokens in live KV blocks",
@@ -150,6 +155,9 @@ class EngineMetrics:
 
     def set_decode_batch_size(self, batch_size: int) -> None:
         self.active_decode_batch_size.set(batch_size)
+
+    def set_decode_batched_tokens(self, token_count: int) -> None:
+        self.active_decode_batched_tokens.set(token_count)
 
     def set_kv_stats(self, stats: Dict[str, float]) -> None:
         self.kv_used_tokens.set(float(stats.get("used_tokens", 0)))

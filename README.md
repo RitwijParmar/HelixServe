@@ -2,6 +2,14 @@
 
 HelixServe is a mini LLM serving engine focused on runtime internals, not chatbot product surface.
 
+## Language Split
+
+HelixServe uses a hybrid implementation:
+
+- Python for server, scheduler, allocator, orchestration, and benchmarking
+- Triton for custom GPU kernel work (`kernels/rmsnorm_triton.py`)
+- CUDA C++ for a focused low-level op (`cuda_ext/csrc/cu_seqlens*`)
+
 ## Scope (v1)
 
 This project implements the six locked features:
@@ -20,6 +28,7 @@ This project implements the six locked features:
 - `cache/` paged allocator and prefix cache.
 - `model/` model backends and tokenizer.
 - `kernels/` Triton kernel and kernel benchmark.
+- `cuda_ext/` optional CUDA C++ extension for decode-time `cu_seqlens` building.
 - `bench/` load generation and benchmark runner.
 - `metrics/` Prometheus metrics registry.
 - `deploy/` Dockerfile and GCP deployment scripts.
@@ -33,6 +42,12 @@ This project implements the six locked features:
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -e .[dev]
+```
+
+Optional CUDA C++ extension build (Linux + CUDA toolkit):
+
+```bash
+HELIX_BUILD_CUDA_EXT=1 pip install -e .[dev]
 ```
 
 Run server:
@@ -90,6 +105,12 @@ Nsight Compute kernel capture:
 bash profiling/ncu_rmsnorm.sh helixserve_rmsnorm
 ```
 
+Nsight Compute CUDA C++ extension capture:
+
+```bash
+bash profiling/ncu_cu_seqlens.sh helixserve_cu_seqlens
+```
+
 ## Metrics
 
 - Prometheus endpoint: `GET /metrics`
@@ -100,7 +121,7 @@ Key runtime metrics:
 - TTFT, ITL, E2E latency histograms
 - Throughput counters
 - KV utilization and fragmentation
-- Queue depth and active decode batch size
+- Queue depth, active decode batch size, and active decode batched tokens
 - Prefix cache hit rate
 
 ## GCP Deployment

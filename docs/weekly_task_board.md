@@ -73,12 +73,15 @@ Tasks:
 - [ ] Capture/replay decode graph for batch sizes {1,2,4,8,16}.
 - [ ] Benchmark CPU overhead and per-token latency with/without graph.
 - [ ] Tune RMSNorm Triton kernel launch params on L4.
+- [ ] Build and validate CUDA C++ `cu_seqlens` extension on the target GPU VM.
 
 Primary files/classes:
 
 - `engine/cuda_graph.py` (`CUDAGraphDecodeCache`)
 - `model/toy_backend.py` (`decode_batch`)
 - `kernels/rmsnorm_triton.py`
+- `cuda_ext/csrc/cu_seqlens.cpp`
+- `cuda_ext/csrc/cu_seqlens_kernel.cu`
 
 Codex prompts:
 

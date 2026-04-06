@@ -7,6 +7,7 @@ from typing import Any, Dict, Optional
 
 from cache.allocator import KVBlockAllocator
 from cache.prefix_cache import PrefixCache
+from cuda_ext import has_compiled_cuda_ext
 from engine.config import EngineConfig
 from engine.request import GenerationParams, InferenceRequest, RequestHandle
 from engine.scheduler import ContinuousBatchScheduler
@@ -123,5 +124,6 @@ class HelixEngine:
                 "type": type(self.backend).__name__,
                 "device": self.backend.device,
                 "cuda_graph_decode": self.backend.supports_cuda_graph_decode,
+                "cuda_cpp_extension_loaded": has_compiled_cuda_ext(),
             },
         }

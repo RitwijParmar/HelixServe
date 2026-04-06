@@ -7,8 +7,11 @@ import time
 from collections import deque
 from typing import Deque, Dict, List, Optional, Tuple
 
+import torch
+
 from cache.allocator import KVBlockAllocator, OutOfKVBlocksError
 from cache.prefix_cache import PrefixCache, PrefixCacheEntry
+from cuda_ext import build_cu_seqlens
 from engine.config import EngineConfig
 from engine.request import InferenceRequest, RequestHandle, RequestState, StreamEvent
 from metrics.registry import EngineMetrics
@@ -271,9 +274,13 @@ class ContinuousBatchScheduler:
         selected = self._select_decode_group()
         if not selected:
             self.metrics.set_decode_batch_size(0)
+            self.metrics.set_decode_batched_tokens(0)
             return
 
         self.metrics.set_decode_batch_size(len(selected))
+
+        seq_lens = [len(req.prompt_tokens) + len(req.generated_tokens) for req in selected]
+        self._build_decode_cu_seqlens(seq_lens)
 
         request_ids = [req.request_id for req in selected]
         prev_tokens = [
@@ -333,6 +340,25 @@ class ContinuousBatchScheduler:
                 await self._finish_request(req, status="ok")
             else:
                 self._decode_queue.append(req.request_id)
+
+    def _build_decode_cu_seqlens(self, seq_lens: List[int]) -> None:
+        token_count = int(sum(seq_lens))
+        self.metrics.set_decode_batched_tokens(token_count)
+
+        if not seq_lens:
+            return
+        if not self.backend.device.startswith("cuda"):
+            return
+        if not torch.cuda.is_available():
+            return
+
+        try:
+            lengths = torch.tensor(seq_lens, device="cuda", dtype=torch.int32)
+            _ = build_cu_seqlens(lengths)
+        except Exception:
+            # Runtime should keep serving even if the optional CUDA extension
+            # isn't available on this environment.
+            return
 
     def _is_finished(self, request: InferenceRequest, token: int) -> bool:
         if token == self.backend.eos_token_id:

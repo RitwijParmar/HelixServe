@@ -40,7 +40,7 @@ include-package-data = true
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["server*", "engine*", "cache*", "model*", "metrics*", "kernels*", "bench*"]
+include = ["server*", "engine*", "cache*", "model*", "metrics*", "kernels*", "bench*", "cuda_ext*"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
