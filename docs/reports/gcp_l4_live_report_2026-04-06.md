@@ -24,6 +24,7 @@ Raw artifacts:
 - Demo video: [`docs/assets/demo/helixserve_demo.mp4`](../assets/demo/helixserve_demo.mp4)
 - Demo GIF: [`docs/assets/demo/helixserve_demo.gif`](../assets/demo/helixserve_demo.gif)
 - Screenshots: [`docs/assets/demo/screenshots`](../assets/demo/screenshots)
+- LinkedIn final narrated cut: [`docs/assets/demo/final/helixserve_linkedin_final.mp4`](../assets/demo/final/helixserve_linkedin_final.mp4)
 
 ## Runtime Config Snapshot
 

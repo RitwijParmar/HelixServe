@@ -12,5 +12,7 @@
   "gif": "docs/assets/demo/helixserve_demo.gif",
   "mp4": "docs/assets/demo/helixserve_demo.mp4",
   "suite_source": "docs/results/20260406T200700Z/suite.json",
-  "phase_table_source": "docs/results/phase_table_20260406T195247Z/phase_table.md"
+  "phase_table_source": "docs/results/phase_table_20260406T195247Z/phase_table.md",
+  "final_video": "docs/assets/demo/final/helixserve_linkedin_final.mp4",
+  "final_assets_manifest": "docs/assets/demo/final/manifest.json"
 }

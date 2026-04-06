@@ -1,0 +1,70 @@
+{
+  "fps": 30,
+  "scenes": [
+    {
+      "id": "intro",
+      "start_s": 0.0,
+      "end_s": 7.0,
+      "overlay": "HelixServe L4 Demo",
+      "subtitle": "Mini LLM runtime internals project"
+    },
+    {
+      "id": "health",
+      "start_s": 7.0,
+      "end_s": 15.0,
+      "overlay": "Live Health Check",
+      "subtitle": "Endpoint is live on a single L4 GPU"
+    },
+    {
+      "id": "stats",
+      "start_s": 15.0,
+      "end_s": 25.0,
+      "overlay": "Runtime Flags Active",
+      "subtitle": "CUDA Graph, Triton kernel, and CUDA C++ path are enabled"
+    },
+    {
+      "id": "architecture",
+      "start_s": 25.0,
+      "end_s": 35.0,
+      "overlay": "Architecture Split",
+      "subtitle": "Server, scheduler, cache, kernels, extension"
+    },
+    {
+      "id": "phase_table",
+      "start_s": 35.0,
+      "end_s": 49.0,
+      "overlay": "Measured Phase Gains",
+      "subtitle": "Throughput moves from 176 to 1008 tok/s in this setup"
+    },
+    {
+      "id": "suite",
+      "start_s": 49.0,
+      "end_s": 61.0,
+      "overlay": "Fresh Live Bench",
+      "subtitle": "Short, long, mixed, repeated-prefix, and burst traffic"
+    },
+    {
+      "id": "example",
+      "start_s": 61.0,
+      "end_s": 70.0,
+      "overlay": "Concrete Example",
+      "subtitle": "Chunked prefill keeps short turns responsive"
+    },
+    {
+      "id": "tests",
+      "start_s": 70.0,
+      "end_s": 78.0,
+      "overlay": "Reproducible Build",
+      "subtitle": "Tests pass and reports are committed"
+    },
+    {
+      "id": "outro",
+      "start_s": 78.0,
+      "end_s": 86.0,
+      "overlay": "Early But Useful",
+      "subtitle": "Product + GitHub links in post"
+    }
+  ],
+  "duration_s": 86.0,
+  "voice": "en-IN-NeerjaNeural"
+}
