@@ -125,6 +125,12 @@ Build the final LinkedIn-ready narrated cut:
 .venv/bin/python scripts/build_final_demo_video.py
 ```
 
+Validate narration style (no first-person singular words):
+
+```bash
+.venv/bin/python scripts/check_product_voiceover.py --path docs/assets/demo/final/voiceover_script.txt
+```
+
 ## Triton Kernel Benchmark
 
 ```bash
