@@ -2,6 +2,15 @@
 
 HelixServe is a mini LLM serving engine focused on runtime internals
 
+## At A Glance
+
+| Area | What to inspect |
+|---|---|
+| Runtime path | Paged KV-cache allocation, continuous batching, chunked prefill, and decode scheduling in `engine/` and `cache/`. |
+| GPU work | Triton RMSNorm benchmark plus optional CUDA C++ sequence-length extension in `kernels/` and `cuda_ext/`. |
+| Serving surface | OpenAI-style completion endpoint, streaming responses, `/stats`, and Prometheus `/metrics`. |
+| Verification | `pytest -q`, `python -m bench.run_live_suite`, and generated demo artifacts under `docs/assets/demo/`. |
+
 ## Language Split
 
 HelixServe uses a hybrid implementation:
