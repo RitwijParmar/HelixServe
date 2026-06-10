@@ -1,4 +1,6 @@
-from cache.allocator import KVBlockAllocator
+import pytest
+
+from cache.allocator import KVBlockAllocator, OutOfKVBlocksError
 
 
 def test_allocator_append_and_release() -> None:
@@ -42,3 +44,22 @@ def test_allocator_pin_and_attach_refcounts() -> None:
     alloc.unpin_blocks("prefix:a", blocks)
     stats_end = alloc.stats()
     assert stats_end["live_blocks"] == 0
+
+
+def test_allocator_rejects_negative_tokens() -> None:
+    alloc = KVBlockAllocator(total_blocks=2, block_size=4)
+
+    with pytest.raises(ValueError, match="num_tokens"):
+        alloc.append_tokens("r1", -1)
+
+
+def test_allocator_exhaustion_preserves_existing_request_state() -> None:
+    alloc = KVBlockAllocator(total_blocks=1, block_size=4)
+
+    alloc.append_tokens("r1", 4)
+    with pytest.raises(OutOfKVBlocksError):
+        alloc.append_tokens("r2", 1)
+
+    assert alloc.get_request_blocks("r1") == [0]
+    assert alloc.get_request_blocks("r2") == []
+    assert alloc.stats()["used_tokens"] == 4
