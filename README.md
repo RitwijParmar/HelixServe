@@ -83,6 +83,8 @@ curl -N http://127.0.0.1:8000/v1/completions \
 
 ## Benchmark
 
+The first versioned benchmark note is [`docs/releases/v0.1.0.md`](docs/releases/v0.1.0.md). It includes the raw artifact paths, the exact L4 setup, and the cold-start caveat for the Triton path.
+
 ```bash
 python -m bench.run_benchmark --url http://127.0.0.1:8000 --requests 200 --concurrency 16 --mode mixed --max-tokens 64 --stream
 ```
