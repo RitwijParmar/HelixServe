@@ -2,6 +2,8 @@
 
 **SLO-aware inference control for latency-sensitive AI systems.**
 
+[Live control-lab demo](https://tickyantra-control-lab.ritwij.chatgpt.site/) · [Measured GCP L4 report](docs/results/v2-gcp-l4/report.md)
+
 TickYantra—*tick* for the atomic event in an electronic market, *yantra* for a precise machine—is an end-to-end serving project built for the failure modes that matter in low-latency production: tail latency, overload, prefix-heavy traffic, measurement integrity, and cost-bounded GPU deployment.
 
 It does not pretend a toy decoder is a production engine. [SGLang v0.5.16](https://github.com/sgl-project/sglang) owns the real CUDA data plane: RadixAttention, continuous batching, paged KV memory, and model execution. TickYantra adds an inspectable SLO control plane and a reproducible experiment layer around it.
@@ -100,7 +102,7 @@ For the independent native baseline, use SGLang's official runner directly again
 | `GET /stats` | Active limit, queue depth, admissions, rejections, hot prefixes |
 | `GET /metrics` | Prometheus counters, gauges, TTFT, queue wait, and E2E histograms |
 
-Optional `TICKYANTRA_API_KEY` protects the gateway. Prefix identity is stored only as a truncated SHA-256 digest; raw prompts never become metric labels.
+Optional `TICKYANTRA_API_KEY` protects the gateway. Prefix identity is stored only as a truncated BLAKE2s digest; raw prompts never become metric labels.
 
 ## Repository map
 
@@ -113,9 +115,18 @@ Optional `TICKYANTRA_API_KEY` protects the gateway. Prefix identity is stored on
 | `docs/v2/` | Design boundaries and experimental methodology |
 | `legacy/v0_toy/` | Preserved, explicitly non-production v0 experiments |
 
-## Current evidence status
+## Measured result: native wins this burst
 
-The control plane is covered by deterministic local tests. A result table is published only after a real GPU run completes; absence of GPU quota is reported as a blocked experiment, never converted into a synthetic benchmark. This is the standard expected for performance work.
+A real `g2-standard-8` / NVIDIA L4 run served 100 shared-prefix requests with 16-way concurrency, 128-token system context, 64-token questions, and 64-token outputs. All three valid variants completed 100/100 requests.
+
+| Path | Throughput | p95 TTFT | p95 E2E | Decision |
+|---|---:|---:|---:|---|
+| Official SGLang native runner | **3.70 req/s** | **137.93 ms** | **3,874.09 ms** | Ship for this workload |
+| TickYantra native proxy | 3.55 req/s | 472.78 ms | 4,177.12 ms | Measurement cross-check |
+| TickYantra static window (12) | 2.90 req/s | 3,939.72 ms | 7,631.61 ms | Do not ship |
+| TickYantra adaptive (12→13) | 2.90 req/s | 3,960.67 ms | 7,672.68 ms | Do not ship; feedback bug found |
+
+The fixed and adaptive gateways amplified queueing under this saturated burst. That is a useful negative result, not an improvement claim: native SGLang is the deployment choice until a controller clears the native tail-latency gate. The experiment also exposed two defects now covered by the follow-up fix: adaptive feedback excluded queue time, and a 1,024-character affinity key fragmented the shared prefix into 100 keys. See the [full report and raw artifacts](docs/results/v2-gcp-l4/report.md).
 
 ## License
 
