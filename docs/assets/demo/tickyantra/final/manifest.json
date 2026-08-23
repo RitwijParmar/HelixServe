@@ -1,0 +1,13 @@
+{
+  "video": "docs/assets/demo/tickyantra/final/tickyantra_end_to_end_demo.mp4",
+  "poster": "docs/assets/demo/tickyantra/final/tickyantra_demo_poster.png",
+  "voiceover": "docs/assets/demo/tickyantra/final/tickyantra_voiceover_en_in_prabhat.mp3",
+  "script": "docs/assets/demo/tickyantra/final/voiceover_script.txt",
+  "timeline": "docs/assets/demo/tickyantra/final/timeline.json",
+  "source_screens": [
+    "docs/assets/demo/tickyantra/screens/01_hero.png",
+    "docs/assets/demo/tickyantra/screens/02_control_lab_nominal.png",
+    "docs/assets/demo/tickyantra/screens/03_control_lab_pressure.png",
+    "docs/assets/demo/tickyantra/screens/04_system.png"
+  ]
+}

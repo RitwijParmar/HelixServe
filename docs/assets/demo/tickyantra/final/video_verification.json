@@ -1,0 +1,14 @@
+{
+  "video": "docs/assets/demo/tickyantra/final/tickyantra_end_to_end_demo.mp4",
+  "duration_s": 186.79,
+  "video_codec": "h264 (High) (avc1 / 0x31637661)",
+  "audio_codec": "aac (LC) (mp4a / 0x6134706D)",
+  "width": 1920,
+  "height": 1080,
+  "valid_1080p": true,
+  "valid_duration": true,
+  "has_audio": true,
+  "faststart": true,
+  "size_bytes": 28162418,
+  "valid": true
+}

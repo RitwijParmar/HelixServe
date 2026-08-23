@@ -2,7 +2,7 @@
 
 **SLO-aware inference control for latency-sensitive AI systems.**
 
-[Live control-lab demo](https://tickyantra-control-lab.ritwij.chatgpt.site/) · [Measured GCP L4 report](docs/results/v2-gcp-l4/report.md)
+[Live control-lab demo](https://tickyantra-control-lab.ritwij.chatgpt.site/) · [Narrated end-to-end video](docs/assets/demo/tickyantra/final/tickyantra_end_to_end_demo.mp4) · [Measured GCP L4 report](docs/results/v2-gcp-l4/report.md)
 
 TickYantra—*tick* for the atomic event in an electronic market, *yantra* for a precise machine—is an end-to-end serving project built for the failure modes that matter in low-latency production: tail latency, overload, prefix-heavy traffic, measurement integrity, and cost-bounded GPU deployment.
 
@@ -77,6 +77,8 @@ PROJECT_ID=your-project ZONE=us-central1-a bash deploy/provision_gcp.sh
 ```
 
 The deployment intentionally fails when GPU quota, drivers, or SGLang are unavailable. It never replaces the requested model with fabricated output.
+
+The stack was redeployed and verified on `tickyantra-l4` in `us-central1-b`: the NVIDIA L4 reported 23,034 MiB, `/readyz` confirmed the SGLang upstream, and a live Qwen2.5-7B completion returned 32 tokens. Inference remains loopback-only and the shutdown guard is re-armed on every boot.
 
 ## Benchmark
 
