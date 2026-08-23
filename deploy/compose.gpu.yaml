@@ -1,0 +1,60 @@
+services:
+  sglang:
+    image: lmsysorg/sglang:v0.5.16
+    command:
+      - python3
+      - -m
+      - sglang.launch_server
+      - --model-path
+      - ${TICKYANTRA_MODEL:-Qwen/Qwen2.5-7B-Instruct}
+      - --host
+      - 0.0.0.0
+      - --port
+      - "30000"
+      - --context-length
+      - "4096"
+      - --mem-fraction-static
+      - "0.78"
+      - --enable-metrics
+    ipc: host
+    shm_size: 16gb
+    volumes:
+      - hf-cache:/root/.cache/huggingface
+    ports:
+      - "127.0.0.1:30000:30000"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:30000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 120
+      start_period: 90s
+
+  tickyantra:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.gateway
+    environment:
+      TICKYANTRA_UPSTREAM_URL: http://sglang:30000
+      TICKYANTRA_MODE: ${TICKYANTRA_MODE:-adaptive}
+      TICKYANTRA_STATIC_LIMIT: ${TICKYANTRA_STATIC_LIMIT:-16}
+      TICKYANTRA_ADAPTIVE_MIN: ${TICKYANTRA_ADAPTIVE_MIN:-2}
+      TICKYANTRA_ADAPTIVE_INITIAL: ${TICKYANTRA_ADAPTIVE_INITIAL:-8}
+      TICKYANTRA_ADAPTIVE_MAX: ${TICKYANTRA_ADAPTIVE_MAX:-32}
+      TICKYANTRA_TARGET_TTFT_MS: ${TICKYANTRA_TARGET_TTFT_MS:-450}
+      TICKYANTRA_QUEUE_TIMEOUT_MS: ${TICKYANTRA_QUEUE_TIMEOUT_MS:-5000}
+    ports:
+      - "127.0.0.1:8000:8000"
+    depends_on:
+      sglang:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  hf-cache:

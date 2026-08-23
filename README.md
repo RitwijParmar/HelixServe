@@ -1,228 +1,122 @@
-# HelixServe
+# TickYantra
 
-HelixServe is a mini LLM serving engine focused on runtime internals
+**SLO-aware inference control for latency-sensitive AI systems.**
 
-## At A Glance
+TickYantra—*tick* for the atomic event in an electronic market, *yantra* for a precise machine—is an end-to-end serving project built for the failure modes that matter in low-latency production: tail latency, overload, prefix-heavy traffic, measurement integrity, and cost-bounded GPU deployment.
 
-| Area | What to inspect |
-|---|---|
-| Runtime path | Paged KV-cache allocation, continuous batching, chunked prefill, and decode scheduling in `engine/` and `cache/`. |
-| GPU work | Triton RMSNorm benchmark plus optional CUDA C++ sequence-length extension in `kernels/` and `cuda_ext/`. |
-| Serving surface | OpenAI-style completion endpoint, streaming responses, `/stats`, and Prometheus `/metrics`. |
-| Verification | `pytest -q`, `python -m bench.run_live_suite`, and generated demo artifacts under `docs/assets/demo/`. |
+It does not pretend a toy decoder is a production engine. [SGLang v0.5.16](https://github.com/sgl-project/sglang) owns the real CUDA data plane: RadixAttention, continuous batching, paged KV memory, and model execution. TickYantra adds an inspectable SLO control plane and a reproducible experiment layer around it.
 
-## Language Split
+## Why this is different
 
-HelixServe uses a hybrid implementation:
+- **No toy path or silent fallback.** Readiness requires a live SGLang server; failures remain failures.
+- **Tail-latency control.** A bounded admission window adjusts from rolling p95 TTFT instead of maximizing queue depth blindly.
+- **Cache-aware fairness.** Recently served prompt prefixes get affinity until a request approaches its queue deadline, then age wins.
+- **Honest measurement.** The benchmark records true streamed TTFT, every inter-token/chunk interval, E2E latency, status, errors, and raw per-request rows.
+- **Comparable experiments.** Native SGLang, fixed-window, and adaptive variants share the same model, seed, prompts, and output lengths.
+- **Real deployment posture.** SGLang is pinned, the model port binds only to loopback, metrics are first-class, and a GCP cost guard stops the GPU VM after two hours.
 
-- Python for server, scheduler, allocator, orchestration, and benchmarking
-- Triton for custom GPU kernel work (`kernels/rmsnorm_triton.py`)
-- CUDA C++ for a focused low-level op (`cuda_ext/csrc/cu_seqlens*`)
+## Architecture
 
-## Scope (v1)
+```text
+OpenAI client
+     |
+     v
+TickYantra :8000 ----> /stats + /metrics
+     |
+     | bounded admission + prefix affinity + SLO feedback
+     v
+SGLang :30000 ----> RadixAttention + continuous batching + paged KV
+     |
+     v
+NVIDIA L4
+```
 
-This project implements the six locked features:
+TickYantra transparently supports `/v1/models`, `/v1/completions`, and `/v1/chat/completions`, including streaming. See [the architecture note](docs/v2/architecture.md) for the lifecycle and correctness boundaries.
 
-1. Decoder-only model backend on one GPU (`ToyDecoderBackend` by default, optional HF backend).
-2. Paged KV-cache allocator with fixed-size blocks.
-3. Continuous batching scheduler.
-4. Split prefill/decode with chunked prefill.
-5. CUDA Graph replay on steady decode path (Toy backend on CUDA).
-6. One custom Triton kernel (`kernels/rmsnorm_triton.py`).
+## Run locally
 
-## Repository Layout
-
-- `server/` HTTP API and streaming.
-- `engine/` runtime config, scheduler, request lifecycle, CUDA graph helper.
-- `cache/` paged allocator and prefix cache.
-- `model/` model backends and tokenizer.
-- `kernels/` Triton kernel and kernel benchmark.
-- `cuda_ext/` optional CUDA C++ extension for decode-time `cu_seqlens` building.
-- `bench/` load generation and benchmark runner.
-- `metrics/` Prometheus metrics registry.
-- `deploy/` Dockerfile and GCP deployment scripts.
-- `profiling/` Nsight helper scripts.
-- `docs/` architecture and execution plan.
-- `tests/` unit and async integration tests.
-
-## Quickstart
+The control plane can be tested without a GPU; actual generation always requires SGLang.
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -e .[dev]
+pip install -e '.[dev]'
+pytest -q
+ruff check .
 ```
 
-Optional CUDA C++ extension build (Linux + CUDA toolkit):
+With SGLang already listening on port 30000:
 
 ```bash
-HELIX_BUILD_CUDA_EXT=1 pip install -e .[dev]
+TICKYANTRA_MODE=adaptive \
+TICKYANTRA_TARGET_TTFT_MS=450 \
+tickyantra
 ```
-
-Run server:
-
-```bash
-HELIX_USE_TOY_BACKEND=1 HELIX_DEVICE=cuda python -m uvicorn server.main:app --host 0.0.0.0 --port 8000
-```
-
-Send request:
-
-```bash
-curl -s http://127.0.0.1:8000/v1/completions \
-  -H "content-type: application/json" \
-  -d '{"prompt":"Explain paged KV-cache", "max_tokens":32}' | jq
-```
-
-Streaming request:
 
 ```bash
 curl -N http://127.0.0.1:8000/v1/completions \
-  -H "content-type: application/json" \
-  -d '{"prompt":"Explain chunked prefill", "max_tokens":32, "stream":true}'
+  -H 'content-type: application/json' \
+  -d '{"model":"Qwen/Qwen2.5-7B-Instruct","prompt":"Assess this order-flow imbalance","max_tokens":64,"stream":true}'
 ```
+
+## Run the real GPU stack
+
+Docker Compose starts SGLang v0.5.16 with `Qwen/Qwen2.5-7B-Instruct` and the TickYantra gateway. Neither service is exposed beyond loopback by default.
+
+```bash
+docker compose -f deploy/compose.gpu.yaml up -d --build
+curl http://127.0.0.1:8000/readyz
+```
+
+GCP provisioning uses a single L4 Deep Learning VM and installs a two-hour hard shutdown guard:
+
+```bash
+PROJECT_ID=your-project ZONE=us-central1-a bash deploy/provision_gcp.sh
+```
+
+The deployment intentionally fails when GPU quota, drivers, or SGLang are unavailable. It never replaces the requested model with fabricated output.
 
 ## Benchmark
 
-The first versioned benchmark note is [`docs/releases/v0.1.0.md`](docs/releases/v0.1.0.md). It includes the raw artifact paths, the exact L4 setup, and the cold-start caveat for the Triton path.
-
 ```bash
-python -m bench.run_benchmark --url http://127.0.0.1:8000 --requests 200 --concurrency 16 --mode mixed --max-tokens 64 --stream
+tickbench \
+  --url http://127.0.0.1:8000 \
+  --model Qwen/Qwen2.5-7B-Instruct \
+  --requests 200 \
+  --concurrency 16 \
+  --max-tokens 64 \
+  --repeated-prefix \
+  --output docs/results/v2/adaptive-prefix.json
 ```
 
-Suggested workloads:
+For the independent native baseline, use SGLang's official runner directly against port 30000. The full rules—including warm-up, workload parity, failure accounting, and required metadata—are in [the benchmark methodology](docs/v2/benchmark-methodology.md).
 
-- `--mode short`
-- `--mode long`
-- `--mode mixed`
-- `--mode repeated_prefix`
+## Operational endpoints
 
-Run the full live suite (short/long/mixed/repeated-prefix/burst) and save artifacts:
+| Endpoint | Purpose |
+|---|---|
+| `GET /healthz` | Gateway process health |
+| `GET /readyz` | Verifies the real SGLang upstream |
+| `GET /stats` | Active limit, queue depth, admissions, rejections, hot prefixes |
+| `GET /metrics` | Prometheus counters, gauges, TTFT, queue wait, and E2E histograms |
 
-```bash
-python -m bench.run_live_suite --url http://127.0.0.1:8000 --stream
-```
+Optional `TICKYANTRA_API_KEY` protects the gateway. Prefix identity is stored only as a truncated SHA-256 digest; raw prompts never become metric labels.
 
-## Demo Video And Screenshots
+## Repository map
 
-Generated demo artifacts:
+| Path | What it proves |
+|---|---|
+| `tickyantra/` | SLO controller, prefix-aware queue, streaming reverse proxy, metrics |
+| `bench/` | Seeded black-box benchmark with raw latency evidence |
+| `deploy/` | Pinned SGLang stack and bounded-cost GCP provisioning |
+| `tests/` | Async concurrency, timeout, adaptation, streaming, auth, readiness |
+| `docs/v2/` | Design boundaries and experimental methodology |
+| `legacy/v0_toy/` | Preserved, explicitly non-production v0 experiments |
 
-- LinkedIn final cut (with voiceover): [`docs/assets/demo/final/helixserve_linkedin_final.mp4`](docs/assets/demo/final/helixserve_linkedin_final.mp4)
-- Final cut timeline: [`docs/assets/demo/final/timeline.json`](docs/assets/demo/final/timeline.json)
-- Final cut voiceover script: [`docs/assets/demo/final/voiceover_script.txt`](docs/assets/demo/final/voiceover_script.txt)
-- Voiceover validation: [`docs/assets/demo/final/voiceover_validation.json`](docs/assets/demo/final/voiceover_validation.json)
-- Video verification: [`docs/assets/demo/final/video_verification.json`](docs/assets/demo/final/video_verification.json)
-- MP4 demo video: [`docs/assets/demo/helixserve_demo.mp4`](docs/assets/demo/helixserve_demo.mp4)
-- GIF preview: [`docs/assets/demo/helixserve_demo.gif`](docs/assets/demo/helixserve_demo.gif)
-- Asset manifest: [`docs/assets/demo/manifest.json`](docs/assets/demo/manifest.json)
+## Current evidence status
 
-![HelixServe Demo GIF](docs/assets/demo/helixserve_demo.gif)
+The control plane is covered by deterministic local tests. A result table is published only after a real GPU run completes; absence of GPU quota is reported as a blocked experiment, never converted into a synthetic benchmark. This is the standard expected for performance work.
 
-Screenshots used in README/report:
+## License
 
-![Health Check](docs/assets/demo/screenshots/01_healthz.png)
-![Runtime Stats](docs/assets/demo/screenshots/02_runtime_stats.png)
-![Completion Request](docs/assets/demo/screenshots/03_completion.png)
-![Benchmark Summary](docs/assets/demo/screenshots/04_live_suite.png)
-![Phase Table](docs/assets/demo/screenshots/05_phase_table.png)
-![Test Suite](docs/assets/demo/screenshots/06_tests.png)
-
-Regenerate all demo assets from a live endpoint:
-
-```bash
-.venv/bin/python scripts/generate_demo_assets.py --url http://34.136.218.176:8000
-```
-
-Build the final LinkedIn-ready narrated cut:
-
-```bash
-.venv/bin/python scripts/build_final_demo_video.py
-```
-
-Validate narration style (no first-person singular words):
-
-```bash
-.venv/bin/python scripts/check_product_voiceover.py --path docs/assets/demo/final/voiceover_script.txt
-```
-
-Validate final video technical specs:
-
-```bash
-.venv/bin/python scripts/verify_final_video.py --video docs/assets/demo/final/helixserve_linkedin_final.mp4
-```
-
-## Triton Kernel Benchmark
-
-```bash
-python -m kernels.benchmark_rmsnorm --rows 4096 --cols 4096
-```
-
-## Profiling
-
-Nsight Systems decode capture:
-
-```bash
-bash profiling/nsys_decode_capture.sh helixserve_decode
-```
-
-Nsight Compute kernel capture:
-
-```bash
-bash profiling/ncu_rmsnorm.sh helixserve_rmsnorm
-```
-
-Nsight Compute CUDA C++ extension capture:
-
-```bash
-bash profiling/ncu_cu_seqlens.sh helixserve_cu_seqlens
-```
-
-## Metrics
-
-- Prometheus endpoint: `GET /metrics`
-- Engine stats endpoint: `GET /stats`
-
-Key runtime metrics:
-
-- TTFT, ITL, E2E latency histograms
-- Throughput counters
-- KV utilization and fragmentation
-- Queue depth, active decode batch size, and active decode batched tokens
-- Prefix cache hit rate
-
-## GCP Deployment
-
-Create G2/L4 VM (Deep Learning VM image family):
-
-```bash
-PROJECT_ID=<your-project> ZONE=us-central1-c bash deploy/gcp_create_g2_l4.sh
-```
-
-Deploy container to VM:
-
-```bash
-PROJECT_ID=<your-project> INSTANCE_NAME=<vm-name> bash deploy/deploy_to_gcp_vm.sh
-```
-
-Configure VM idle auto-shutdown (default: 30 minutes idle):
-
-```bash
-PROJECT_ID=<your-project> INSTANCE_NAME=<vm-name> bash deploy/setup_idle_shutdown_on_vm.sh
-```
-
-Disable auto-shutdown temporarily on the VM:
-
-```bash
-sudo touch /var/lib/helixserve/disable_idle_shutdown
-```
-
-Re-enable auto-shutdown:
-
-```bash
-sudo rm -f /var/lib/helixserve/disable_idle_shutdown
-```
-
-## Tests
-
-```bash
-pytest -q
-```
+MIT
