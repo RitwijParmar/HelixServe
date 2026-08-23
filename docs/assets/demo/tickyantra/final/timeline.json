@@ -1,0 +1,78 @@
+{
+  "fps": 24,
+  "voice": "en-IN-PrabhatNeural",
+  "scenes": [
+    {
+      "id": "identity",
+      "start_s": 0.0,
+      "end_s": 14.467,
+      "title": "TICKYANTRA",
+      "subtitle": "Tick for the market event. Yantra for the precise machine."
+    },
+    {
+      "id": "hero",
+      "start_s": 14.467,
+      "end_s": 30.25,
+      "title": "NOT A CHATBOT WRAPPER",
+      "subtitle": "A queue-control and measurement system around a real CUDA data plane."
+    },
+    {
+      "id": "request_path",
+      "start_s": 30.25,
+      "end_s": 49.978,
+      "title": "REQUEST PATH",
+      "subtitle": "Bounded admission, fair affinity, observable release."
+    },
+    {
+      "id": "control_lab",
+      "start_s": 49.978,
+      "end_s": 72.337,
+      "title": "PRESSURE CHAMBER",
+      "subtitle": "Change arrival pressure, shared context, and the client TTFT target."
+    },
+    {
+      "id": "control_law",
+      "start_s": 72.337,
+      "end_s": 90.75,
+      "title": "CONTROL LAW",
+      "subtitle": "Queue time is part of the SLO signal."
+    },
+    {
+      "id": "benchmark",
+      "start_s": 90.75,
+      "end_s": 115.739,
+      "title": "MEASURED ON GCP L4",
+      "subtitle": "100 requests \u2022 concurrency 16 \u2022 shared-prefix workload \u2022 zero valid-run failures"
+    },
+    {
+      "id": "negative_result",
+      "start_s": 115.739,
+      "end_s": 138.097,
+      "title": "THE NEGATIVE RESULT MATTERS",
+      "subtitle": "Native SGLang remains the deployment choice for this burst."
+    },
+    {
+      "id": "principles",
+      "start_s": 138.097,
+      "end_s": 153.88,
+      "title": "ENGINEERING POSITION",
+      "subtitle": "No toy path. Fair affinity. Raw evidence."
+    },
+    {
+      "id": "deployment",
+      "start_s": 153.88,
+      "end_s": 172.293,
+      "title": "DEPLOYMENT POSTURE",
+      "subtitle": "Reproducible, private by default, and bounded by cost controls."
+    },
+    {
+      "id": "outro",
+      "start_s": 172.293,
+      "end_s": 186.76,
+      "title": "CONTROL THE QUEUE.",
+      "subtitle": "Measure the tail. Preserve the evidence. Fix what the data disproves."
+    }
+  ],
+  "duration_s": 186.76,
+  "voiceover_duration_s": 182.76
+}

@@ -10,4 +10,4 @@ nvidia-smi
 docker run --rm --gpus all nvidia/cuda:12.4.1-base-ubuntu22.04 nvidia-smi
 
 # Hard cost guardrail: stop the VM after two hours even if a benchmark fails.
-systemd-run --unit=helix-cost-guard --on-active=2h /sbin/shutdown -h now
+systemd-run --unit=tickyantra-cost-guard --on-active=2h /sbin/shutdown -h now

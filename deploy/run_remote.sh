@@ -2,7 +2,7 @@
 set -euo pipefail
 
 REPOSITORY_URL="${REPOSITORY_URL:-https://github.com/RitwijParmar/TickYantra.git}"
-BRANCH="${BRANCH:-feature/sglang-v2}"
+BRANCH="${BRANCH:-main}"
 INSTALL_DIR="${INSTALL_DIR:-/opt/tickyantra}"
 
 sudo mkdir -p "${INSTALL_DIR}"
