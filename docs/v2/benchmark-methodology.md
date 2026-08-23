@@ -10,4 +10,4 @@ Three variants use the same model and workload:
 2. **Static:** TickYantra with a fixed concurrency window.
 3. **Adaptive:** TickYantra with SLO feedback and prefix-affinity queueing.
 
-Runs include unique-prefix and shared-prefix traffic. A claimed improvement is valid only when failure rate does not increase and the raw JSON artifact is committed. Cost guardrails automatically stop the GCP VM after two hours; the final workflow stops it immediately after collection.
+Runs include unique-prefix and shared-prefix traffic. Shared-prefix runs set the affinity fingerprint width so it ends inside the common system context, before request-specific text. A claimed improvement is valid only when failure rate does not increase and the raw JSON artifact is committed. Client-observed TTFT includes time spent in the admission queue. Cost guardrails automatically stop the GCP VM after two hours; the final workflow stops it immediately after collection.

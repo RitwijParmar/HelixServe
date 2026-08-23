@@ -1,0 +1,1 @@
+{"version":"2.0.0","upstream":"http://sglang:30000","controller":{"mode":"adaptive","active":0,"limit":13,"queued":0,"admitted_total":100,"rejected_total":0,"limit_adjustments":1,"hot_prefixes":100,"target_ttft_ms":450}}

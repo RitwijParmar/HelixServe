@@ -1,12 +1,16 @@
 from __future__ import annotations
 
+from types import SimpleNamespace
+
 import httpx
 import pytest
 from fastapi import FastAPI, Request
 from fastapi.responses import StreamingResponse
 
-from tickyantra.app import create_app
+from tickyantra.app import _prefix_key, _proxy_non_streaming, create_app
 from tickyantra.config import Settings
+from tickyantra.controller import Admission
+from tickyantra.metrics import Metrics
 
 
 def fake_sglang() -> FastAPI:
@@ -33,6 +37,48 @@ def fake_sglang() -> FastAPI:
         return {"choices": [{"text": "hello"}], "usage": {"completion_tokens": 1}}
 
     return app
+
+
+def test_prefix_key_groups_shared_system_context() -> None:
+    shared = "market microstructure policy " * 8
+    first = {"prompt": f"{shared}first unique order-flow question"}
+    second = {"prompt": f"{shared}second unique volatility question"}
+
+    assert _prefix_key(first, 128) == _prefix_key(second, 128)
+    assert _prefix_key(first, 1_024) != _prefix_key(second, 1_024)
+
+
+@pytest.mark.asyncio
+async def test_controller_ttft_includes_admission_queue(monkeypatch: pytest.MonkeyPatch) -> None:
+    class Client:
+        async def post(self, path: str, **kwargs: object) -> httpx.Response:
+            return httpx.Response(200, json={"choices": [{"text": "ok"}]})
+
+    class Controller:
+        observed_ttft_ms: float | None = None
+
+        async def release(self, admission: Admission, *, ttft_ms: float | None) -> None:
+            self.observed_ttft_ms = ttft_ms
+
+    monkeypatch.setattr("tickyantra.app.time.perf_counter", lambda: 12.0)
+    controller = Controller()
+    request = SimpleNamespace(
+        app=SimpleNamespace(state=SimpleNamespace(client=Client()))
+    )
+
+    response = await _proxy_non_streaming(
+        request,
+        "/v1/completions",
+        {"prompt": "hello"},
+        {},
+        Admission(prefix_key="shared", queue_wait_s=1.5, admitted_at=11.5),
+        10.0,
+        controller,
+        Metrics(),
+    )
+
+    assert response.status_code == 200
+    assert controller.observed_ttft_ms == 2_000.0
 
 
 @pytest.mark.asyncio

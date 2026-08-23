@@ -19,7 +19,7 @@ class Settings:
     target_ttft_ms: int = 500
     queue_timeout_ms: int = 2_000
     sample_window: int = 32
-    prefix_chars: int = 1_024
+    prefix_chars: int = 128
     hot_prefix_ttl_s: int = 60
     api_key: str = ""
 
@@ -35,7 +35,7 @@ class Settings:
             target_ttft_ms=_env_int("TICKYANTRA_TARGET_TTFT_MS", 500),
             queue_timeout_ms=_env_int("TICKYANTRA_QUEUE_TIMEOUT_MS", 2_000),
             sample_window=_env_int("TICKYANTRA_SAMPLE_WINDOW", 32),
-            prefix_chars=_env_int("TICKYANTRA_PREFIX_CHARS", 1_024),
+            prefix_chars=_env_int("TICKYANTRA_PREFIX_CHARS", 128),
             hot_prefix_ttl_s=_env_int("TICKYANTRA_HOT_PREFIX_TTL_S", 60),
             api_key=os.getenv("TICKYANTRA_API_KEY", ""),
         )
