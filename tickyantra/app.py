@@ -168,7 +168,10 @@ async def _proxy_non_streaming(
     ttft_ms: float | None = None
     try:
         upstream = await request.app.state.client.post(path, json=payload, headers=headers)
-        ttft_ms = (time.perf_counter() - admission.admitted_at) * 1000.0
+        # The SLO is client-observed TTFT, so admission queueing is part of the
+        # feedback signal. Excluding it can make an overloaded controller raise
+        # its limit while clients are already waiting seconds for a first token.
+        ttft_ms = (time.perf_counter() - started) * 1000.0
         metrics.ttft.observe(ttft_ms / 1000.0)
         metrics.requests.labels("completed" if upstream.status_code < 400 else "upstream_error").inc()
         return Response(
@@ -215,7 +218,7 @@ async def _proxy_streaming(
         try:
             async for chunk in upstream.aiter_bytes():
                 if ttft_ms is None and b"data:" in chunk and b"[DONE]" not in chunk:
-                    ttft_ms = (time.perf_counter() - admission.admitted_at) * 1000.0
+                    ttft_ms = (time.perf_counter() - started) * 1000.0
                     metrics.ttft.observe(ttft_ms / 1000.0)
                 yield chunk
             metrics.requests.labels("completed").inc()
