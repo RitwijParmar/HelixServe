@@ -1,6 +1,6 @@
 services:
   sglang:
-    image: lmsysorg/sglang:v0.5.16
+    image: lmsysorg/sglang@sha256:7b6a35df9839fd593a94a1eaee82d7777f472225d9f3ad1f8a2e0cb2bd1785d0
     command:
       - python3
       - -m
