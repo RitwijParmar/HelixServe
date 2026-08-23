@@ -1,50 +1,32 @@
 [build-system]
-requires = ["setuptools>=69", "wheel"]
+requires = ["setuptools>=75", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "helixserve"
-version = "0.1.0"
-description = "Mini LLM serving engine with paged KV cache, continuous batching, chunked prefill, prefix caching, CUDA graph decode, and Triton kernel"
+name = "tickyantra"
+version = "2.0.0"
+description = "SLO-aware, prefix-affinity control plane for low-latency SGLang inference"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.11"
 license = { text = "MIT" }
-authors = [
-  { name = "Ritwij Parmar" }
-]
+authors = [{ name = "Ritwij Parmar" }]
 dependencies = [
-  "fastapi>=0.111.0",
-  "uvicorn>=0.30.0",
-  "pydantic>=2.8.0",
-  "httpx>=0.27.0",
-  "prometheus-client>=0.20.0",
-  "numpy>=1.26.0",
-  "torch>=2.3.0",
-  "transformers>=4.42.0",
-  "triton>=2.3.0; platform_system == 'Linux'",
+  "fastapi>=0.115,<1",
+  "httpx>=0.28,<1",
+  "prometheus-client>=0.21,<1",
+  "uvicorn[standard]>=0.34,<1",
 ]
 
 [project.optional-dependencies]
-dev = [
-  "pytest>=8.2.0",
-  "pytest-asyncio>=0.23.0",
-  "ruff>=0.5.0",
-  "pillow>=11.0.0",
-  "imageio>=2.37.0",
-  "imageio-ffmpeg>=0.6.0",
-  "edge-tts>=7.2.0",
-]
+dev = ["pytest>=8.3,<9", "pytest-asyncio>=0.25,<1", "ruff>=0.11,<1"]
 
 [project.scripts]
-helixserve = "server.main:run"
-helixbench = "bench.run_benchmark:main"
-
-[tool.setuptools]
-include-package-data = true
+tickyantra = "tickyantra.main:main"
+tickbench = "bench.run:main"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["server*", "engine*", "cache*", "model*", "metrics*", "kernels*", "bench*", "cuda_ext*"]
+include = ["tickyantra*", "bench*"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
@@ -52,8 +34,9 @@ testpaths = ["tests"]
 
 [tool.ruff]
 line-length = 100
-target-version = "py39"
+target-version = "py311"
+exclude = ["legacy"]
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "B"]
+select = ["E", "F", "I", "B", "UP"]
 ignore = ["E501"]
